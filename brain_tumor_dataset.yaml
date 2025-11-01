@@ -1,0 +1,21 @@
+# Brain Tumor Dataset Configuration
+
+# Set the path to your dataset's root directory
+# IMPORTANT: Update this path to where you unzipped your dataset
+path: C:\Users\USER\Desktop\Brain Tumor\brain_tumor_project\brain_tumor_dataset  # Example: /Users/me/Projects/brain-tumor-dataset
+
+# Define the training and validation image directories
+# These paths are relative to the 'path' above
+train: train/images
+val: val/images
+
+# Define the number of classes
+nc: 4
+
+# Define the class names in the correct order (0, 1, 2, 3)
+# This matches the Kaggle dataset linked in the guide
+names:
+  0: Glioma
+  1: Meningioma
+  2: No Tumor
+  3: Pituitary

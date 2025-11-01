@@ -1,0 +1,26 @@
+# ================================
+# GITIGNORE for YOLO Brain Tumor Project
+# ================================
+
+# --- DATASET ---
+# Never commit your dataset!
+brain_tumor_dataset/
+
+# --- PYTHON VIRTUAL ENVIRONMENTS ---
+# Never commit your environment folder!
+yolo_env/
+venv/
+env/
+
+# --- YOLO TRAINING RESULTS ---
+# Contains trained models and result files (large files)
+runs/
+brain_tumor_detector/
+
+# --- PYTHON CACHE FILES ---
+_pycache_/
+*.py[cod]
+
+# --- OS-SPECIFIC FILES ---
+.DS_Store
+Thumbs.db
