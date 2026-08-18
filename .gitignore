@@ -24,3 +24,7 @@ _pycache_/
 # --- OS-SPECIFIC FILES ---
 .DS_Store
 Thumbs.db
+
+# --- WEB APP FILES ---
+uploads/
+results/
