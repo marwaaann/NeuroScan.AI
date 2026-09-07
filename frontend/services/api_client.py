@@ -17,6 +17,7 @@ class APIClient:
     def health_check(self) -> Tuple[bool, Dict[str, Any]]:
         """
         Poll GET /health to check if backend server and YOLO model are ready.
+        Falls back to in-process YOLO service if backend is not running (e.g. Streamlit Cloud / standalone).
         Returns (is_healthy, response_data_or_error_dict).
         """
         try:
@@ -28,7 +29,21 @@ class APIClient:
                 return is_loaded, data
             return False, {"error": f"HTTP {res.status_code}"}
         except Exception as e:
-            logger.debug(f"Health check failed: {e}")
+            logger.debug(f"Health check to API failed: {e}")
+            # Standalone fallback: check direct YOLOService
+            try:
+                from backend.services.yolo_service import get_yolo_service
+                svc = get_yolo_service()
+                if svc.is_loaded():
+                    return True, {
+                        "status": "healthy",
+                        "model_loaded": True,
+                        "model_path": svc.model_path,
+                        "classes": svc.get_class_list(),
+                        "mode": "standalone"
+                    }
+            except Exception as fallback_err:
+                logger.debug(f"Direct YOLO fallback error: {fallback_err}")
             return False, {"error": str(e)}
 
     def predict_image(
@@ -39,11 +54,14 @@ class APIClient:
     ) -> Tuple[bool, Dict[str, Any]]:
         """
         Send image bytes via POST /predict to run YOLOv8 model inference.
+        Falls back to in-process YOLO service if backend is not running.
         Returns (success, result_dict_or_error_dict).
         """
+        mime_type = "image/png" if filename.lower().endswith(".png") else "image/jpeg"
+        
         try:
             url = f"{self.base_url}/predict"
-            files = {"file": (filename, image_bytes, "image/jpeg")}
+            files = {"file": (filename, image_bytes, mime_type)}
             data = {"confidence": str(confidence)}
             
             res = requests.post(url, files=files, data=data, timeout=30)
@@ -56,10 +74,17 @@ class APIClient:
                 except Exception:
                     err_msg = f"HTTP {res.status_code} Error"
                 return False, {"error": err_msg}
-        except requests.exceptions.Timeout:
-            return False, {"error": "Request timed out while running inference."}
-        except requests.exceptions.ConnectionError:
-            return False, {"error": "Unable to connect to the inference service."}
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as net_err:
+            # Standalone fallback: execute inference directly with YOLOService
+            try:
+                from backend.services.yolo_service import get_yolo_service
+                svc = get_yolo_service()
+                if svc.is_loaded():
+                    result = svc.predict(image_bytes=image_bytes, conf_threshold=confidence)
+                    return True, result
+            except Exception as direct_err:
+                logger.error(f"Direct inference fallback error: {direct_err}")
+            return False, {"error": f"Unable to connect to the inference service: {str(net_err)}"}
         except Exception as e:
             return False, {"error": f"An error occurred: {str(e)}"}
 

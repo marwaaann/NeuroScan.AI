@@ -49,7 +49,10 @@ class YOLOService:
             os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'model', 'best.pt'),
             'model/best.pt',
             'brain_tumor_detector/yolov8n_run_1/weights/best.pt',
-            '../model/best.pt'
+            '../model/best.pt',
+            os.path.join(os.getcwd(), 'yolov8n.pt'),
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'yolov8n.pt'),
+            'yolov8n.pt'
         ]
         
         for p in possible_paths:
