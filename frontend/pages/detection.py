@@ -16,9 +16,13 @@ def base64_to_bytes(base64_str: str) -> bytes:
     return base64.b64decode(base64_str)
 
 def get_sample_scans():
-    """Locate sample MRI files in workspace dataset"""
+    """Locate sample MRI files in workspace or samples/ directory"""
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     samples = [
-        ("Glioma Sample", os.path.join("brain_tumor_dataset", "Train", "images", "gg (105).jpg")),
+        ("Glioma Sample Scan", os.path.join(base_dir, "samples", "sample_glioma.jpg")),
+        ("Brain Scan Sample #1", os.path.join(base_dir, "samples", "sample_scan_1.jpg")),
+        ("Brain Scan Sample #2", os.path.join(base_dir, "samples", "sample_scan_2.jpg")),
+        ("Glioma Sample (Dataset)", os.path.join("brain_tumor_dataset", "Train", "images", "gg (105).jpg")),
         ("Validation Scan #1", os.path.join("brain_tumor_dataset", "Val", "images", "gg (10).jpg")),
         ("Validation Scan #2", os.path.join("brain_tumor_dataset", "Val", "images", "gg (131).jpg"))
     ]

@@ -1,155 +1,233 @@
-# NeuroScan AI: AI-Powered Brain Tumor Detection Web Application
+# NeuroScan AI: Intelligent Brain Tumor Detection System
 
-NeuroScan AI is a production-style medical computer-vision application that detects and classifies brain tumors in Magnetic Resonance Imaging (MRI) scans using **Ultralytics YOLOv8**, **FastAPI**, and **Streamlit**.
+<p align="center">
+  <img src="frontend/favicon.png" alt="NeuroScan AI Logo" width="80" height="80" />
+</p>
+
+<p align="center">
+  <strong>Clinical Computer-Vision & Deep Learning Pipeline for MRI Brain Tumor Detection</strong>
+</p>
+
+<p align="center">
+  <a href="https://neuroscan-ai-lp16.onrender.com"><img src="https://img.shields.io/badge/Render-Live%20Demo-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Live Demo on Render" /></a>
+  <a href="https://neuroscanai-ahwmpetaryjhq9pm3qv4et.streamlit.app"><img src="https://img.shields.io/badge/Streamlit%20Cloud-Live%20App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit Cloud App" /></a>
+  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+" />
+  <img src="https://img.shields.io/badge/YOLOv8-Ultralytics-00FFFF?style=for-the-badge&logo=yolo&logoColor=black" alt="YOLOv8" />
+  <img src="https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Ready" />
+</p>
+
+---
+
+## 🌐 Live Deployments
+
+You can test and interact with the live application directly in your browser:
+
+| Platform | Deployment URL | Status | Description |
+| :--- | :--- | :--- | :--- |
+| **Render (Primary)** | [**https://neuroscan-ai-lp16.onrender.com**](https://neuroscan-ai-lp16.onrender.com) | ![Live](https://img.shields.io/badge/Status-Active-brightgreen) | Containerized Docker deployment on Render cloud infrastructure. |
+| **Streamlit Cloud** | [**https://neuroscanai-ahwmpetaryjhq9pm3qv4et.streamlit.app**](https://neuroscanai-ahwmpetaryjhq9pm3qv4et.streamlit.app) | ![Live](https://img.shields.io/badge/Status-Active-brightgreen) | Native serverless hosting on Streamlit Community Cloud. |
+
+---
+
+## 📖 Overview
+
+**NeuroScan AI** is an end-to-end medical computer-vision application engineered to assist clinicians, researchers, and radiologists in detecting and localizing brain tumors from Magnetic Resonance Imaging (MRI) scans. Powered by a custom-trained **Ultralytics YOLOv8** model, it delivers real-time bounding-box detection, confidence scoring, and diagnostic analytics across four distinct tissue classes.
 
 ---
 
 ## 🎯 Architecture Overview
 
 ```text
-                         USER
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │    Streamlit    │
-                  │    FRONTEND     │
-                  │  (Port 8501)    │
-                  └────────┬────────┘
-                           │  HTTP POST /predict
-                           ▼
-                  ┌─────────────────┐
-                  │     FastAPI     │
-                  │     BACKEND     │
-                  │  (Port 8000)    │
-                  └────────┬────────┘
-                           │  Inference
-                           ▼
-                  ┌─────────────────┐
-                  │   YOLOv8 Model  │
-                  │  (model/best.pt)│
-                  └────────┬────────┘
-                           │  Structured Results
-                           ▼
-                  ┌─────────────────┐
-                  │  JSON Response  │
-                  │ Detections+BBox │
-                  └─────────────────┘
+                           CLIENT / BROWSER
+                                  │
+                                  ▼
+                     ┌─────────────────────────┐
+                     │    Streamlit FRONTEND   │
+                     │  • Custom UI Theme      │
+                     │  • Sample Scan Testing  │
+                     │  • Diagnostic Dashboard │
+                     └────────────┬────────────┘
+                                  │
+                 ┌────────────────┴────────────────┐
+                 │ HTTP (Dual Architecture Support)│
+                 ▼                                 ▼
+      ┌─────────────────────┐           ┌─────────────────────┐
+      │   FastAPI BACKEND   │           │ Standalone Fallback │
+      │  (Microservice API) │           │ (In-Process YOLOv8) │
+      └──────────┬──────────┘           └──────────┬──────────┘
+                 │                                 │
+                 └────────────────┬────────────────┘
+                                  │ PyTorch Inference
+                                  ▼
+                     ┌─────────────────────────┐
+                     │   Trained YOLOv8 Model  │
+                     │     (model/best.pt)     │
+                     └────────────┬────────────┘
+                                  │ Structured Detections + Annotated Image
+                                  ▼
+                     ┌─────────────────────────┐
+                     │ Visual Bounding Boxes   │
+                     │ & Confidence Analytics  │
+                     └─────────────────────────┘
 ```
 
 ---
 
 ## 🌟 Key Features
 
-- **🚀 FastAPI Microservice Backend**: Dedicated RESTful API endpoint for high-speed model inference, health checks, and JSON response formatting.
-- **🎨 Streamlit AI Dashboard**: Modern dark medical theme with live server connection badges, interactive sliders, side-by-side MRI comparisons, and image download tools.
-- **🎯 YOLOv8 Object Detection**: Utilizes custom-trained PyTorch weights (`model/best.pt`) to locate tumor boundaries (`x1, y1, x2, y2`) and output confidence scores.
-- **📈 Real Empirical Analytics**: Visualizes validation mAP@50 (96.31%), Precision (93.87%), Recall (94.01%), loss progression, and confusion matrices directly from dataset metrics.
-- **🔒 Robust Validation & Safety**: Input image validation (JPG, JPEG, PNG), upload size safeguards, slider confidence bounds, and prominent medical disclaimers.
+- **🎯 High-Precision Tumor Detection**: Custom-trained YOLOv8 object detection model identifying precise bounding coordinates (`x1, y1, x2, y2`) and confidence scores.
+- **🖼️ Built-in Sample Scans**: Pre-loaded with verified brain MRI scans for instantaneous one-click testing without requiring manual file uploads.
+- **🎨 Modern Clinical UI**: Custom Light/Dark-mode styling, responsive layout, side-by-side original vs. annotated scan comparison, and one-click annotated image export.
+- **📈 Comprehensive Model Analytics**: Interactive exploration of validation performance metrics, confusion matrices, Precision-Recall curves, and training loss progression.
+- **⚡ Dual-Mode Execution**:
+  - **Microservice Mode**: Scalable two-tier setup with FastAPI backend and Streamlit frontend.
+  - **Standalone Cloud Mode**: Automatically runs in-process inference when deployed on single-container platforms (Render, Streamlit Cloud, Hugging Face).
+- **🐳 Production Containerization**: Pre-configured with `Dockerfile` and `.dockerignore` for portable container deployment anywhere.
 
 ---
 
-## 🏷️ Class Mapping (4 Classes)
+## 🏷️ Classification Labels
 
-| Class ID | Tumor Class Label | Description |
-| :--- | :--- | :--- |
-| `0` | **Glioma** | Primary brain tumor originating from glial cells |
-| `1` | **Meningioma** | Tumor arising from brain membranes (meninges) |
-| `2` | **No Tumor** | MRI scan showing healthy brain tissue |
-| `3` | **Pituitary** | Tumor located in the pituitary gland |
+The model is trained to identify and categorize four tissue types:
+
+| Class ID | Tumor Label | Clinical Description |
+| :---: | :--- | :--- |
+| `0` | **Glioma** | Primary tumor originating in the glial cells of the brain or spinal cord |
+| `1` | **Meningioma** | Typically benign tumor arising from the meningeal membranes surrounding the brain |
+| `2` | **No Tumor** | Normal brain MRI scan displaying healthy tissue with no detected lesions |
+| `3` | **Pituitary** | Abnormal growth developing in the pituitary gland at the base of the brain |
 
 ---
 
-## 📂 Project Directory Structure
+## 📊 Empirical Model Performance
+
+Evaluated on rigorous validation subsets with high-resolution 640×640 MRI tensors:
+
+| Metric | Score | Details |
+| :--- | :---: | :--- |
+| **mAP@50** | **96.31%** | Mean Average Precision at IoU threshold 0.50 |
+| **Precision** | **93.87%** | Low false-positive rate across all tumor classes |
+| **Recall** | **94.01%** | Sensitivity in identifying present tumors |
+| **Input Resolution** | **640 × 640** | Normalized RGB Tensor Matrix |
+| **Inference Latency** | **~25–45 ms** | Real-time prediction speed on standard CPU/GPU |
+
+---
+
+## 📂 Project Structure
 
 ```text
-brain_tumor_project/
+NeuroScan.AI/
+├── frontend/                     # Streamlit web application
+│   ├── app.py                    # Main dashboard entry point & routing
+│   ├── components/               # Modular UI components (sidebar, cards)
+│   ├── pages/                    # Multi-view pages (detection, analytics, overview, login)
+│   ├── services/                 # API client with intelligent standalone fallback
+│   ├── styles/                   # Modern clinical CSS stylesheets
+│   └── favicon.png               # Custom branding favicon
 │
-├── backend/
-│   ├── __init__.py
-│   ├── main.py                  # FastAPI server entry point & CORS
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   └── prediction.py        # /health and /predict API endpoints
-│   ├── services/
-│   │   ├── __init__.py
-│   │   └── yolo_service.py      # Thread-safe YOLOv8 model loading & inference
-│   └── schemas/
-│       ├── __init__.py
-│       └── prediction.py        # Pydantic request/response schemas
-│
-├── frontend/
-│   └── app.py                   # Streamlit web application (NeuroScan AI UI)
+├── backend/                      # FastAPI REST microservice
+│   ├── main.py                   # FastAPI server entry point & CORS configuration
+│   ├── routes/                   # API route handlers (/health, /predict)
+│   ├── services/                 # Model loading singleton (yolo_service.py)
+│   └── schemas/                  # Pydantic request & response models
 │
 ├── model/
-│   └── best.pt                  # Reused trained YOLOv8 PyTorch model weights
+│   └── best.pt                   # Trained YOLOv8 PyTorch model weights (6.2 MB)
 │
-├── training/
-│   ├── train_yolo.py            # Preserved YOLOv8 training pipeline
-│   └── validate_model.py       # Preserved validation script
+├── samples/                      # Verified sample MRI scans for 1-click testing
+│   ├── sample_glioma.jpg
+│   ├── sample_scan_1.jpg
+│   └── sample_scan_2.jpg
 │
-├── brain_tumor_dataset.yaml     # Dataset class mapping configuration
-├── predict.py                   # Preserved CLI testing script
-├── requirements.txt             # Project dependencies
-└── README.md                    # Project documentation
+├── training/                     # Offline pipeline & model development
+│   ├── train_yolo.py             # Model training script
+│   ├── validate_model.py         # Evaluation & metrics validation script
+│   ├── predict.py                # Standalone test inference script
+│   └── brain_tumor_dataset.yaml  # Dataset configuration
+│
+├── legacy_flask_app/             # Previous Flask prototype (archived for reference)
+│   ├── app.py
+│   ├── templates/
+│   └── README.md
+│
+├── .streamlit/
+│   └── config.toml               # Streamlit theme & UI configuration
+│
+├── Dockerfile                    # Container configuration for Docker/Render/Railway
+├── .dockerignore                 # Container build exclusion rules
+├── requirements.txt              # Production Python dependencies
+├── start_webapp.bat              # Local 1-click Windows launcher
+└── README.md                     # Comprehensive project documentation
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Local Setup & Installation
 
-### 1. Install Dependencies
+### Prerequisites
+- Python 3.10, 3.11, or 3.12
+- Git
 
-Ensure Python 3.10+ is installed, then run:
+### 1. Clone the Repository
+```bash
+git clone https://github.com/marwaaann/NeuroScan.AI.git
+cd NeuroScan.AI
+```
 
+### 2. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Start the FastAPI Backend API
+### 3. Run Locally
 
-Launch the backend inference server on port 8000:
-
-```bash
-python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+#### Option A: Quick Launcher (Windows)
+Double-click `start_webapp.bat` or run:
+```cmd
+start_webapp.bat
 ```
+This automatically boots the FastAPI backend on port 8000 and the Streamlit frontend on port 8501.
 
-Interactive Swagger documentation is available at: `http://127.0.0.1:8000/docs`.
-
-### 3. Start the Streamlit Frontend UI
-
-In a separate terminal window, launch the frontend dashboard:
-
+#### Option B: Run Streamlit Standalone
 ```bash
-python -m streamlit run frontend/app.py --server.port 8501
+streamlit run frontend/app.py --server.port 8501
 ```
+Open your browser at **`http://localhost:8501`**.
 
-Open your browser at `http://localhost:8501`.
+#### Option C: Run with Docker
+```bash
+docker build -t neuroscan-ai .
+docker run -p 8501:8501 neuroscan-ai
+```
+Open your browser at **`http://localhost:8501`**.
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Reference (FastAPI Backend)
+
+When running the backend server (`uvicorn backend.main:app --port 8000`), interactive Swagger documentation is available at `http://127.0.0.1:8000/docs`.
 
 ### `GET /health`
-Returns system status and model readiness.
+Returns system status and model loading readiness.
 
-**Response**:
 ```json
 {
   "status": "healthy",
   "model_loaded": true,
-  "model_path": "C:/Users/.../model/best.pt",
+  "model_path": ".../model/best.pt",
   "classes": ["Glioma", "Meningioma", "No Tumor", "Pituitary"]
 }
 ```
 
 ### `POST /predict`
-Upload an MRI image to perform YOLOv8 tumor detection.
+Upload an MRI scan image to perform YOLOv8 tumor detection.
 
-**Request Form Data**:
-- `file`: Image file (`.jpg`, `.jpeg`, `.png`)
-- `confidence`: Confidence threshold float (`0.10` to `0.95`, default `0.50`)
+- **Parameters**:
+  - `file`: Multipart form-data image file (`.jpg`, `.jpeg`, `.png`)
+  - `confidence`: Confidence threshold between `0.10` and `0.95` (default: `0.50`)
 
-**Response**:
+- **Sample Response**:
 ```json
 {
   "success": true,
@@ -177,5 +255,12 @@ Upload an MRI image to perform YOLOv8 tumor detection.
 ## ⚠️ Medical Disclaimer
 
 > **RESEARCH AND EDUCATIONAL USE ONLY**
->
-> NeuroScan AI is a machine-learning research prototype. Its predictions are model inferences and **do not constitute medical diagnoses**. They should never replace evaluation by a qualified radiologist or healthcare professional.
+> 
+> NeuroScan AI is developed for academic, educational, and computational research purposes. The model predictions, bounding boxes, and probability scores generated by this system **do not constitute medical diagnoses** or definitive clinical conclusions. This software should never be utilized as a sole substitute for professional evaluation, consultation, or diagnosis by a licensed radiologist or healthcare provider.
+
+---
+
+## 👤 Author & Maintainer
+
+- **Marwan Shafi** ([@marwaaann](https://github.com/marwaaann))
+- Repository: [github.com/marwaaann/NeuroScan.AI](https://github.com/marwaaann/NeuroScan.AI)
