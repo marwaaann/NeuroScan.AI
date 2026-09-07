@@ -28,3 +28,6 @@ Thumbs.db
 # --- WEB APP FILES ---
 uploads/
 results/
+
+# --- LOCAL DOCS ---
+*.pdf
