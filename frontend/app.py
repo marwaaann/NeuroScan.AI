@@ -15,7 +15,7 @@ FAVICON_PATH = os.path.join(os.path.dirname(__file__), "favicon.png")
 page_icon_val = FAVICON_PATH if os.path.exists(FAVICON_PATH) else None
 
 st.set_page_config(
-    page_title="Nuroscan | Clinical Brain MRI Platform",
+    page_title="NeuroScan.AI | Clinical Brain MRI Platform",
     page_icon=page_icon_val,
     layout="wide",
     initial_sidebar_state="expanded"
@@ -103,6 +103,18 @@ from frontend.pages.how_it_works import render_how_it_works_page
 from frontend.pages.about import render_about_page
 from frontend.pages.contact import render_contact_page
 
+def render_top_theme_toggle():
+    """Render sleek, compact Dark/Light mode toggle in the top-right corner"""
+    curr_theme = st.session_state.get("theme_mode", "Light")
+    if curr_theme == "Light":
+        if st.button("Dark", icon=":material/dark_mode:", key="top_theme_toggle", help="Switch to Dark Mode"):
+            st.session_state["theme_mode"] = "Dark"
+            st.rerun()
+    else:
+        if st.button("Light", icon=":material/light_mode:", key="top_theme_toggle", help="Switch to Light Mode"):
+            st.session_state["theme_mode"] = "Light"
+            st.rerun()
+
 def main():
     # Session state initialization - Direct Access by Default
     if "current_page" not in st.session_state:
@@ -110,6 +122,9 @@ def main():
 
     if "scan_history" not in st.session_state:
         st.session_state["scan_history"] = []
+
+    # Render floating top-right theme switch
+    render_top_theme_toggle()
 
     # Render main clinical shell & sidebar
     selected_page, is_api_connected = render_sidebar()
@@ -123,7 +138,7 @@ def main():
         render_analytics_page()
     elif selected_page in ["How It Works"]:
         render_how_it_works_page()
-    elif selected_page in ["About Nuroscan", "About"]:
+    elif selected_page in ["About NeuroScan.AI", "About Nuroscan", "About"]:
         render_about_page()
     elif selected_page in ["Contact Us", "Contact"]:
         render_contact_page()

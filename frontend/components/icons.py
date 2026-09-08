@@ -1,5 +1,5 @@
 """
-Nuroscan Clinical Iconography System
+NeuroScan.AI Clinical Iconography System
 Lightweight, crisp inline SVG icons inspired by Lucide & Feather medical icons.
 Zero external font dependencies, pixel-perfect rendering across all devices.
 """

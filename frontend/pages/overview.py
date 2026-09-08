@@ -13,12 +13,12 @@ from frontend.components.icons import get_svg_icon
 
 def render_overview_page(is_api_connected: bool):
     """
-    Render NURA-inspired Nuroscan AI Brain Health Screening Dashboard
+    Render NURA-inspired NeuroScan.AI Brain Health Screening Dashboard
     with live precision gauge, sandbox scan tester, research paper metrics,
     and embedded consultation form.
     """
     render_top_header(
-        title="Nuroscan — AI Brain Health Screening Platform",
+        title="NeuroScan.AI — AI Brain Health Screening Platform",
         description="Automated cranial MRI brain tumor localization and multi-class screening powered by YOLO deep learning architectures.",
         meta_text="Empirical Research: IIIT Sonepat (Rishabh, Marwan et al.) • 7,500+ Scans • 92 FPS Real-Time Inference",
         badges=["NURA Clinical Screening", "IIIT Sonepat Research", "95% System Accuracy", "Multi-Planar MRI (Axial, Sagittal, Coronal)"]
@@ -29,7 +29,7 @@ def render_overview_page(is_api_connected: bool):
         <div class="hero-banner-card">
             <div class="hero-title">Precision AI Brain Health Screening</div>
             <div class="hero-description">
-                Inspired by modern preventative AI screening centers, Nuroscan combines state-of-the-art 
+                Inspired by modern preventative AI screening centers, NeuroScan.AI combines state-of-the-art 
                 single-stage deep learning (YOLOv8 &amp; YOLOv11) with multi-planar cranial MRI analysis to deliver 
                 instantaneous lesion localization and multi-class classification in under 35 milliseconds.
             </div>

@@ -5,7 +5,7 @@ from frontend.components.icons import get_svg_icon
 def render_sidebar():
     """
     Render clean, professional clinical navigation sidebar with real SVG iconography,
-    instant health status polling, theme mode selector (Light/Dark), and Nuroscan branding.
+    instant health status polling, and NeuroScan.AI branding.
     """
     # Brand Header with sleek SVG brain/shield icon
     st.sidebar.markdown(f"""
@@ -14,7 +14,7 @@ def render_sidebar():
                 {get_svg_icon("scan", size=22, color="#FFFFFF")}
             </div>
             <div>
-                <div class="brand-text-title">Nuroscan</div>
+                <div class="brand-text-title">NeuroScan.AI</div>
                 <div class="brand-text-sub">AI Brain Health Screening</div>
             </div>
         </div>
@@ -32,7 +32,7 @@ def render_sidebar():
         ("MRI Detection", ":material/radiology:"),
         ("Model Analytics", ":material/analytics:"),
         ("How It Works", ":material/account_tree:"),
-        ("About Nuroscan", ":material/description:"),
+        ("About NeuroScan.AI", ":material/description:"),
         ("Contact Us", ":material/support_agent:")
     ]
 
@@ -45,7 +45,8 @@ def render_sidebar():
             "MRI Analysis": "MRI Detection",
             "Detection": "MRI Detection",
             "Analytics": "Model Analytics",
-            "About": "About Nuroscan",
+            "About": "About NeuroScan.AI",
+            "About Nuroscan": "About NeuroScan.AI",
             "Contact": "Contact Us"
         }
         current_page = mapping.get(current_page, "Dashboard")
@@ -59,7 +60,7 @@ def render_sidebar():
         if st.sidebar.button(
             page_name,
             icon=icon_spec,
-            key=f"nav_btn_{page_name.replace(' ', '_')}",
+            key=f"nav_btn_{page_name.replace(' ', '_').replace('.', '_')}",
             type=btn_type,
             use_container_width=True
         ):
@@ -68,27 +69,6 @@ def render_sidebar():
                 st.rerun()
 
     selected_route = st.session_state.get("current_page", "Dashboard")
-
-    st.sidebar.markdown("---")
-    
-    # --- APPEARANCE / THEME TOGGLE (LIGHT & DARK MODE) ---
-    st.sidebar.markdown("<div class='sidebar-section-title'>Appearance</div>", unsafe_allow_html=True)
-    
-    c_light, c_dark = st.sidebar.columns(2)
-    with c_light:
-        is_light = st.session_state["theme_mode"] == "Light"
-        btn_type = "primary" if is_light else "secondary"
-        if st.button("Light", icon=":material/light_mode:", key="theme_btn_light", type=btn_type, use_container_width=True):
-            if st.session_state["theme_mode"] != "Light":
-                st.session_state["theme_mode"] = "Light"
-                st.rerun()
-    with c_dark:
-        is_dark = st.session_state["theme_mode"] == "Dark"
-        btn_type = "primary" if is_dark else "secondary"
-        if st.button("Dark", icon=":material/dark_mode:", key="theme_btn_dark", type=btn_type, use_container_width=True):
-            if st.session_state["theme_mode"] != "Dark":
-                st.session_state["theme_mode"] = "Dark"
-                st.rerun()
 
     st.sidebar.markdown("---")
     st.sidebar.markdown("<div class='sidebar-section-title'>Engine Status</div>", unsafe_allow_html=True)

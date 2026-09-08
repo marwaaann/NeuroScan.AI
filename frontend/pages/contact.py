@@ -10,7 +10,7 @@ def render_contact_page():
     """
     render_top_header(
         title="Clinical Consultation & Inquiry",
-        description="Connect with the Nuroscan team for AI screening demonstrations, clinical research collaborations, or hospital pilot programs.",
+        description="Connect with the NeuroScan.AI team for AI screening demonstrations, clinical research collaborations, or hospital pilot programs.",
         meta_text="Official Inquiry Portal • IIIT Sonepat Research Initiative • Response Time: Within 24h",
         badges=["AI Screening", "Clinical Collaboration", "IIIT Sonepat Research", "PACS Integration"]
     )
@@ -24,7 +24,7 @@ def render_contact_page():
                     Clinical Screening
                 </div>
                 <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">
-                    Deploy Nuroscan's automated YOLOv8 inference as a second-reader assistant in diagnostic imaging workflows.
+                    Deploy NeuroScan.AI's automated YOLOv8 inference as a second-reader assistant in diagnostic imaging workflows.
                 </div>
             </div>
         """, unsafe_allow_html=True)

@@ -8,7 +8,7 @@ def render_how_it_works_page():
     based on the IIIT Sonepat study ('Brain Tumor Detection Using YOLOv8 and YOLOv11').
     """
     render_top_header(
-        title="How Nuroscan Works — System Architecture",
+        title="How NeuroScan.AI Works — System Architecture",
         description="Comprehensive technical walkthrough of the deep learning pipeline transforming raw multi-planar MRI scans into localized diagnostic insights.",
         meta_text="Based on Research: IIIT Sonepat (Rishabh, Marwan et al.) • Multi-Perspective Cranial Imaging",
         badges=["YOLOv8 & YOLOv11", "Single-Stage Detection", "Bounding Box Regression", "92 FPS Real-Time"]
@@ -95,7 +95,7 @@ def render_how_it_works_page():
                             <td style="padding: 10px; color: var(--primary); font-weight: 700;">92 FPS (Ultra-fast)</td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; font-weight: 600;">Deployment In Nuroscan</td>
+                            <td style="padding: 10px; font-weight: 600;">Deployment In NeuroScan.AI</td>
                             <td style="padding: 10px; font-weight: 600; color: var(--success);">Active Production Model</td>
                             <td style="padding: 10px;">Research Benchmark Target</td>
                         </tr>

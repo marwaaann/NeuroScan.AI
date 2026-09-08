@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nuroscan — NURA-Inspired Clinical Health Screening Design System
+   NeuroScan.AI — Clinical Health Screening Design System
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -61,8 +61,8 @@
     --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* --- DARK MODE TOKENS (NURA CLINICAL DARK PALETTE) --- */
-.nuroscan-dark, .stApp.nuroscan-dark, [data-theme="dark"], .stApp[data-theme="dark"] {
+/* --- DARK MODE TOKENS (NEUROSCAN.AI CLINICAL DARK PALETTE) --- */
+.neuroscan-dark, .stApp.neuroscan-dark, .nuroscan-dark, .stApp.nuroscan-dark, [data-theme="dark"], .stApp[data-theme="dark"] {
     --bg-main: #0A1118 !important;
     --bg-sidebar: #0D1622 !important;
     --surface-card: #131E2C !important;
@@ -104,32 +104,42 @@
 }
 
 /* Dark mode surface styling */
+.stApp.neuroscan-dark .hero-banner-card,
 .stApp.nuroscan-dark .hero-banner-card {
     background: linear-gradient(135deg, #0F202B 0%, #131E2C 50%, #0D1B28 100%) !important;
     border-color: rgba(0, 191, 165, 0.25) !important;
 }
 
+.stApp.neuroscan-dark .nura-contact-card,
 .stApp.nuroscan-dark .nura-contact-card {
     background: linear-gradient(135deg, #0D2028 0%, #131E2C 100%) !important;
     border-color: rgba(0, 191, 165, 0.25) !important;
 }
 
+.stApp.neuroscan-dark div[data-testid="stTextInput"] input,
 .stApp.nuroscan-dark div[data-testid="stTextInput"] input,
+.stApp.neuroscan-dark div[data-testid="stTextArea"] textarea,
 .stApp.nuroscan-dark div[data-testid="stTextArea"] textarea,
+.stApp.neuroscan-dark div[data-testid="stSelectbox"] > div > div,
 .stApp.nuroscan-dark div[data-testid="stSelectbox"] > div > div {
     background-color: #131E2C !important;
     border-color: #223447 !important;
     color: #F0F6FC !important;
 }
 
+.stApp.neuroscan-dark .kpi-card,
 .stApp.nuroscan-dark .kpi-card,
+.stApp.neuroscan-dark .image-panel-card,
 .stApp.nuroscan-dark .image-panel-card,
+.stApp.neuroscan-dark .disclaimer-card,
 .stApp.nuroscan-dark .disclaimer-card,
+.stApp.neuroscan-dark .result-banner-box,
 .stApp.nuroscan-dark .result-banner-box {
     background-color: #131E2C !important;
     border-color: #223447 !important;
 }
 
+.stApp.neuroscan-dark .tech-badge,
 .stApp.nuroscan-dark .tech-badge {
     background-color: #1A283A !important;
     border-color: #223447 !important;
@@ -318,6 +328,49 @@ div[data-testid="stSidebar"] .st-key-theme_btn_dark button {
 div[data-testid="stSidebar"] .st-key-theme_btn_light button:hover,
 div[data-testid="stSidebar"] .st-key-theme_btn_dark button:hover {
     transform: none !important;
+}
+
+/* --- TOP-RIGHT FLOATING COMPACT THEME TOGGLE BUTTON --- */
+.st-key-top_theme_toggle {
+    position: fixed !important;
+    top: 10px !important;
+    right: 68px !important;
+    z-index: 999999 !important;
+    width: auto !important;
+}
+
+.st-key-top_theme_toggle button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    background: var(--surface-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+.st-key-top_theme_toggle button:hover {
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+    background: var(--surface-elevated) !important;
+    box-shadow: 0 2px 10px rgba(0, 168, 150, 0.25) !important;
+    transform: translateY(-1px) !important;
+}
+
+.st-key-top_theme_toggle button span[data-testid="stIconMaterial"] {
+    font-size: 1.05rem !important;
+    margin: 0 !important;
+    color: inherit !important;
 }
 
 /* Streamlit Radio Nav Fallback Overrides */

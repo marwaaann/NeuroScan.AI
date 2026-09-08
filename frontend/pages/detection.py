@@ -24,7 +24,7 @@ def render_detection_page(is_api_connected: bool):
         current_step = 2
 
     render_top_header(
-        title="Nuroscan MRI Detection Studio",
+        title="NeuroScan.AI MRI Detection Studio",
         description="Upload or select a patient cranial MRI scan to localize and classify brain tumors using YOLOv8.",
         meta_text="Model: YOLOv8n • Inference: Dual-Mode (FastAPI / In-Process Fallback)",
         badges=["YOLOv8 Detection", "Sub-Second Latency", "Export Ready"]

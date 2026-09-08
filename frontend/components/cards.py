@@ -71,7 +71,7 @@ def render_disclaimer():
                 <span style="display: inline-flex; align-items: center; gap: 6px;">{alert_icon} Research &amp; Educational Tool — Not a Medical Diagnosis</span>
             </div>
             <div class="disclaimer-body">
-                Nuroscan provides deep learning bounding-box detection to assist scientific and educational research.
+                NeuroScan.AI provides deep learning bounding-box detection to assist scientific and educational research.
                 Model inferences are probabilistic and must never replace diagnostic evaluation by a licensed physician or board-certified radiologist.
             </div>
         </div>
@@ -81,7 +81,7 @@ def render_footer():
     """Render professional clinical healthcare footer inspired by NURA"""
     st.markdown("""
         <div class="footer-container">
-            <div><strong>Nuroscan</strong> — AI Brain Health Screening &amp; Medical Vision Platform</div>
+            <div><strong>NeuroScan.AI</strong> — AI Brain Health Screening &amp; Medical Vision Platform</div>
             <div style="margin-top: 4px; color: var(--text-muted);">
                 Research by IIIT Sonepat (Rishabh, Marwan et al.) • YOLOv8 &amp; YOLOv11 Architectures
             </div>

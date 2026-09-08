@@ -13,12 +13,12 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("nuroscan_backend")
+logger = logging.getLogger("neuroscan_backend")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan context manager for initializing YOLO model and SQLite database on startup"""
-    logger.info("Initializing Nuroscan Clinical Backend Service...")
+    logger.info("Initializing NeuroScan.AI Clinical Backend Service...")
     init_contact_db()
     service = get_yolo_service()
     if service.is_loaded():
@@ -26,10 +26,10 @@ async def lifespan(app: FastAPI):
     else:
         logger.warning("YOLOv8 Model failed to load during startup.")
     yield
-    logger.info("Shutting down Nuroscan Clinical Backend Service.")
+    logger.info("Shutting down NeuroScan.AI Clinical Backend Service.")
 
 app = FastAPI(
-    title="Nuroscan Clinical Screening API",
+    title="NeuroScan.AI Clinical Screening API",
     description="FastAPI Backend for YOLOv8 Brain Tumor Detection & Healthcare Consultation",
     version="2.2.0",
     lifespan=lifespan,
@@ -53,7 +53,7 @@ app.include_router(contact_router)
 @app.get("/", summary="Root endpoint")
 async def root():
     return {
-        "brand": "Nuroscan Clinical Platform",
+        "brand": "NeuroScan.AI Clinical Platform",
         "status": "online",
         "documentation": "/docs",
         "health_check": "/health",

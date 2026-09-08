@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 class APIClient:
     """
-    High-performance client abstraction for Nuroscan inference and consultations.
+    High-performance client abstraction for NeuroScan.AI inference and consultations.
     Automatically prioritizes ultra-fast in-process PyTorch YOLO inference when available locally,
     eliminating network latency, socket timeouts, and Render cold-start delays.
     """
@@ -28,7 +28,7 @@ class APIClient:
                 if svc.is_loaded():
                     self._direct_yolo = svc
                     self._use_direct = True
-                    logger.info("Nuroscan Engine running in direct high-speed in-process mode.")
+                    logger.info("NeuroScan.AI Engine running in direct high-speed in-process mode.")
             except Exception as e:
                 logger.debug(f"Direct engine check: {e}")
 

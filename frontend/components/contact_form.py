@@ -101,7 +101,7 @@ def render_contact_form(compact: bool = False):
                 for err in errors:
                     st.error(f"⚠️ {err}")
             else:
-                with st.spinner("Submitting your inquiry to Nuroscan backend..."):
+                with st.spinner("Submitting your inquiry to NeuroScan.AI backend..."):
                     client = get_api_client()
                     success, res = client.submit_contact(
                         full_name=clean_name,
@@ -115,7 +115,7 @@ def render_contact_form(compact: bool = False):
                         contact_id = res.get("contact_id", "REF-#" + digits[-4:])
                         st.success(f"""
                             **Inquiry Submitted Successfully! (Reference ID: #{contact_id})**  
-                            Thank you, **{clean_name}**. Your consultation request has been securely stored in the Nuroscan database.  
+                            Thank you, **{clean_name}**. Your consultation request has been securely stored in the NeuroScan.AI database.  
                             Our clinical specialist team ({location}) will review your request and reach out at `{clean_phone}` shortly.
                         """)
                     else:

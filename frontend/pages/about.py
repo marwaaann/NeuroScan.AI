@@ -4,11 +4,11 @@ from frontend.components.icons import get_svg_icon
 
 def render_about_page():
     """
-    Render About Nuroscan page with academic research paper attribution,
+    Render About NeuroScan.AI page with academic research paper attribution,
     IIIT Sonepat authorship, clinical dataset methodology, and technical architecture.
     """
     render_top_header(
-        title="About Nuroscan & Research Background",
+        title="About NeuroScan.AI & Research Background",
         description="Clinical deep learning initiative for real-time brain MRI tumor localization and classification.",
         meta_text="Based on Research: IIIT Sonepat • YOLOv8 & YOLOv11 Benchmarks • Multi-Planar MRI Analysis",
         badges=["IIIT Sonepat Research", "Peer-Reviewed Architecture", "Multi-Planar MRI", "Open-Source AI"]
