@@ -26,20 +26,20 @@ def render_sidebar():
     if "theme_mode" not in st.session_state:
         st.session_state["theme_mode"] = "Light"
 
-    # Navigation options - Professional clean labels (no cheap emojis)
-    nav_options = [
-        "Dashboard",
-        "MRI Detection",
-        "Model Analytics",
-        "How It Works",
-        "About Nuroscan",
-        "Contact Us"
+    # Navigation items - Real clinical icons via Google Material Symbols (no emojis, no radio circles)
+    nav_items = [
+        ("Dashboard", ":material/dashboard:"),
+        ("MRI Detection", ":material/radiology:"),
+        ("Model Analytics", ":material/analytics:"),
+        ("How It Works", ":material/account_tree:"),
+        ("About Nuroscan", ":material/description:"),
+        ("Contact Us", ":material/support_agent:")
     ]
 
     # Map current_page
     current_page = st.session_state.get("current_page", "Dashboard")
-    if current_page not in nav_options:
-        # Fallbacks for old names
+    nav_names = [item[0] for item in nav_items]
+    if current_page not in nav_names:
         mapping = {
             "Overview": "Dashboard",
             "MRI Analysis": "MRI Detection",
@@ -49,19 +49,25 @@ def render_sidebar():
             "Contact": "Contact Us"
         }
         current_page = mapping.get(current_page, "Dashboard")
-
-    current_idx = nav_options.index(current_page) if current_page in nav_options else 0
+        st.session_state["current_page"] = current_page
 
     st.sidebar.markdown("<div class='sidebar-section-title'>Workspaces</div>", unsafe_allow_html=True)
     
-    selected_route = st.sidebar.radio(
-        "Navigation",
-        nav_options,
-        index=current_idx,
-        label_visibility="collapsed"
-    )
+    for page_name, icon_spec in nav_items:
+        is_active = (current_page == page_name)
+        btn_type = "primary" if is_active else "secondary"
+        if st.sidebar.button(
+            page_name,
+            icon=icon_spec,
+            key=f"nav_btn_{page_name.replace(' ', '_')}",
+            type=btn_type,
+            use_container_width=True
+        ):
+            if st.session_state.get("current_page") != page_name:
+                st.session_state["current_page"] = page_name
+                st.rerun()
 
-    st.session_state["current_page"] = selected_route
+    selected_route = st.session_state.get("current_page", "Dashboard")
 
     st.sidebar.markdown("---")
     
@@ -72,14 +78,14 @@ def render_sidebar():
     with c_light:
         is_light = st.session_state["theme_mode"] == "Light"
         btn_type = "primary" if is_light else "secondary"
-        if st.button("Light", key="theme_btn_light", type=btn_type, use_container_width=True):
+        if st.button("Light", icon=":material/light_mode:", key="theme_btn_light", type=btn_type, use_container_width=True):
             if st.session_state["theme_mode"] != "Light":
                 st.session_state["theme_mode"] = "Light"
                 st.rerun()
     with c_dark:
         is_dark = st.session_state["theme_mode"] == "Dark"
         btn_type = "primary" if is_dark else "secondary"
-        if st.button("Dark", key="theme_btn_dark", type=btn_type, use_container_width=True):
+        if st.button("Dark", icon=":material/dark_mode:", key="theme_btn_dark", type=btn_type, use_container_width=True):
             if st.session_state["theme_mode"] != "Dark":
                 st.session_state["theme_mode"] = "Dark"
                 st.rerun()
@@ -112,13 +118,5 @@ def render_sidebar():
             </div>
         ''', unsafe_allow_html=True)
 
-    st.sidebar.markdown("---")
-    
-    # Working Reset Analysis Action
-    if st.sidebar.button("Clear Active Scan", use_container_width=True, type="secondary"):
-        for key in ["last_pred", "last_bytes", "last_filename", "sandbox_result", "sandbox_bytes"]:
-            if key in st.session_state:
-                del st.session_state[key]
-        st.rerun()
-
     return selected_route, is_connected
+
