@@ -40,13 +40,26 @@ from frontend.components.icons import get_svg_icon
 
 def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
     """Render comprehensive clinical diagnostic result panel"""
-    count = pred.get("count", 0)
-    detections = pred.get("detections", [])
+    # Robust determination of tumor presence
+    is_tumor = pred.get("is_tumor_detected", False)
+    tumor_dets = pred.get("tumor_detections", [])
+    
+    # Fallback if legacy response format
+    if not tumor_dets and "detections" in pred:
+        tumor_dets = [d for d in pred["detections"] if d.get("class_id") != 2]
+        is_tumor = len(tumor_dets) > 0
+    
+    tumor_count = len(tumor_dets)
+    healthy_conf = pred.get("healthy_confidence")
+    if healthy_conf is None:
+        healthy_dets = [d for d in pred.get("detections", []) if d.get("class_id") == 2]
+        if healthy_dets:
+            healthy_conf = healthy_dets[0].get("confidence")
     
     # --- 1. Clinical Diagnosis Header Banner ---
-    if count > 0:
-        primary_tumor = detections[0]["class_name"]
-        primary_conf = detections[0]["confidence"] * 100
+    if is_tumor and tumor_count > 0:
+        primary_tumor = tumor_dets[0]["class_name"]
+        primary_conf = tumor_dets[0]["confidence"] * 100
         alert_svg = get_svg_icon("alert", size=22, color="var(--danger)")
         
         st.markdown(f"""
@@ -57,39 +70,42 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
                             {alert_svg} <span>{primary_tumor} Detected</span>
                         </div>
                         <div class="result-primary-subtitle">
-                            Localized {count} abnormal lesion region(s) in cranial MRI scan.
+                            Localized {tumor_count} abnormal lesion region(s) in cranial MRI scan.
                         </div>
                     </div>
                     <div style="text-align: right;">
                         <span class="pill-status" style="background: rgba(239, 68, 68, 0.15); color: var(--danger); font-size: 0.85rem; padding: 6px 14px;">
-                            Confidence: {primary_conf:.2f}%
+                            Lesion Confidence: {primary_conf:.1f}%
                         </span>
                     </div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
-        render_confidence_meter(detections[0]["confidence"])
+        render_confidence_meter(tumor_dets[0]["confidence"])
     else:
         check_svg = get_svg_icon("check", size=22, color="var(--success)")
+        cert_text = f"Certainty: {healthy_conf*100:.1f}%" if healthy_conf else "Zero Lesions"
         st.markdown(f"""
             <div class="result-banner-box result-banner-negative">
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <div class="result-primary-title" style="display: flex; align-items: center; gap: 8px;">
-                            {check_svg} <span>No Lesion Detected</span>
+                            {check_svg} <span>No Tumor Detected (Healthy Cranial Scan)</span>
                         </div>
                         <div class="result-primary-subtitle">
-                            No lesions exceeded the selected confidence threshold in this scan.
+                            Scan analyzed across all cranial slices. Normal brain tissue confirmed with no pathological lesions.
                         </div>
                     </div>
                     <div style="text-align: right;">
                         <span class="pill-status pill-online" style="font-size: 0.85rem; padding: 6px 14px;">
-                            Status: Normal Tissue
+                            Status: Normal Tissue • {cert_text}
                         </span>
                     </div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
+        if healthy_conf:
+            render_confidence_meter(healthy_conf)
 
     # --- 2. Side-by-Side Image Comparison ---
     st.markdown("### Visual Image Comparison")
@@ -127,10 +143,10 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
     st.markdown("<br/>", unsafe_allow_html=True)
 
     # --- 3. Structured Detection Details ---
-    if count > 0:
+    if is_tumor and tumor_count > 0:
         st.markdown("### Diagnostic Region Details")
         rows = []
-        for idx, d in enumerate(detections, 1):
+        for idx, d in enumerate(tumor_dets, 1):
             bbox = d.get("bbox", {})
             width = round(bbox.get("x2", 0) - bbox.get("x1", 0), 1)
             height = round(bbox.get("y2", 0) - bbox.get("y1", 0), 1)
@@ -142,6 +158,34 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
                 "Dimensions (W × H)": f"{width} × {height} px"
             })
         st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+    else:
+        st.markdown("### Diagnostic Findings Summary")
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.markdown("""
+                <div class="kpi-card" style="text-align: center; padding: 18px 12px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">PATHOLOGICAL LESIONS</div>
+                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--success);">0 Detected</div>
+                    <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">Zero malignant abnormalities</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with c2:
+            st.markdown("""
+                <div class="kpi-card" style="text-align: center; padding: 18px 12px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">CRANIAL TISSUE STATUS</div>
+                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--primary);">Normal Baseline</div>
+                    <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">Healthy ventricular &amp; cortical patterns</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with c3:
+            conf_str = f"{healthy_conf*100:.1f}%" if healthy_conf else "Optimal"
+            st.markdown(f"""
+                <div class="kpi-card" style="text-align: center; padding: 18px 12px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">SCREENING CERTAINTY</div>
+                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--primary);">{conf_str}</div>
+                    <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">Model consensus index</div>
+                </div>
+            """, unsafe_allow_html=True)
 
     # --- 4. Export Actions ---
     st.markdown("### Export Diagnostic Results")

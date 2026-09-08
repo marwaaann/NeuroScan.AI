@@ -15,8 +15,12 @@ class DetectionItem(BaseModel):
 
 class PredictResponse(BaseModel):
     success: bool = Field(True, description="Indicates whether inference completed successfully")
-    count: int = Field(..., description="Number of tumor bounding box detections")
-    detections: List[DetectionItem] = Field(default_factory=list, description="List of detected tumor bounding boxes")
+    is_tumor_detected: bool = Field(False, description="Whether pathological tumor lesions were localized")
+    count: int = Field(..., description="Number of tumor bounding box detections (excluding healthy tissue)")
+    total_detections: Optional[int] = Field(None, description="Total bounding boxes localized across all classes")
+    tumor_detections: List[DetectionItem] = Field(default_factory=list, description="List of detected pathological tumor bounding boxes")
+    detections: List[DetectionItem] = Field(default_factory=list, description="List of all detected bounding boxes")
+    healthy_confidence: Optional[float] = Field(None, description="Confidence of normal tissue when no tumor is detected")
     annotated_image: Optional[str] = Field(None, description="Base64-encoded PNG image with drawn bounding boxes")
     message: str = Field(..., description="Summary message of the detection results")
 

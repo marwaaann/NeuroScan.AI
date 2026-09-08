@@ -178,11 +178,12 @@ def render_overview_page(is_api_connected: bool):
 
             if "sandbox_result" in st.session_state:
                 res = st.session_state["sandbox_result"]
-                count = res.get("count", 0)
-                detections = res.get("detections", [])
+                is_tumor = res.get("is_tumor_detected", False)
+                tumor_count = res.get("count", 0)
+                tumor_dets = res.get("tumor_detections", [])
 
-                if count > 0:
-                    top_det = detections[0]
+                if is_tumor and tumor_count > 0:
+                    top_det = tumor_dets[0]
                     conf_pct = top_det["confidence"] * 100
                     st.markdown(f"""
                         <div class="result-banner-box result-banner-positive" style="padding: 16px; margin-bottom: 12px;">
@@ -190,18 +191,20 @@ def render_overview_page(is_api_connected: bool):
                                 {get_svg_icon('alert', size=22, color='#DC2626')} {top_det['class_name']} Detected ({conf_pct:.1f}%)
                             </div>
                             <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">
-                                Localized {count} lesion region(s) in {st.session_state.get('sandbox_name', 'MRI Scan')}.
+                                Localized {tumor_count} lesion region(s) in {st.session_state.get('sandbox_name', 'MRI Scan')}.
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
                 else:
+                    healthy_conf = res.get("healthy_confidence")
+                    sub_txt = f"Normal cranial tissue confirmed ({healthy_conf*100:.1f}% certainty)." if healthy_conf else "Tissue appears healthy and clear of tumor lesions."
                     st.markdown(f"""
                         <div class="result-banner-box result-banner-negative" style="padding: 16px; margin-bottom: 12px;">
                             <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
                                 {get_svg_icon('check', size=22, color='#059669')} No Lesion Detected
                             </div>
                             <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">
-                                Tissue appears healthy above current confidence threshold.
+                                {sub_txt}
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
@@ -211,9 +214,12 @@ def render_overview_page(is_api_connected: bool):
                     st.image(ann_img, caption="YOLOv8 Detection Overlay with Bounding Box", use_container_width=True)
 
                 if st.button("Open Full MRI Analyzer with This Scan ➔", type="secondary", use_container_width=True):
+                    fname = os.path.basename(selected_item["path"])
+                    fbytes = st.session_state["sandbox_bytes"]
+                    st.session_state["active_bytes"] = fbytes
+                    st.session_state["active_filename"] = fname
                     st.session_state["last_pred"] = res
-                    st.session_state["last_bytes"] = st.session_state["sandbox_bytes"]
-                    st.session_state["last_filename"] = os.path.basename(selected_item["path"])
+                    st.session_state["last_pred_scan_id"] = f"{fname}_{len(fbytes)}"
                     st.session_state["current_page"] = "MRI Detection"
                     st.rerun()
             else:

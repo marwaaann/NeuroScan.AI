@@ -18,61 +18,51 @@ class APIClient:
         # Check direct in-process YOLO engine availability
         self._direct_yolo = None
         self._use_direct = False
-        self._cached_health = None
-        
-        # If API_BASE_URL is not explicitly set, prefer ultra-fast local engine
-        if not self.explicit_api_url:
-            try:
-                from backend.services.yolo_service import get_yolo_service
-                svc = get_yolo_service()
-                if svc.is_loaded():
-                    self._direct_yolo = svc
-                    self._use_direct = True
-                    logger.info("NeuroScan.AI Engine running in direct high-speed in-process mode.")
-            except Exception as e:
-                logger.debug(f"Direct engine check: {e}")
+        self._ensure_direct_engine()
+
+    def _ensure_direct_engine(self) -> bool:
+        """Initialize or verify direct in-process YOLO engine"""
+        if self._direct_yolo and self._direct_yolo.is_loaded():
+            return True
+        try:
+            from backend.services.yolo_service import get_yolo_service
+            svc = get_yolo_service()
+            if svc.is_loaded():
+                self._direct_yolo = svc
+                self._use_direct = True
+                logger.info("NeuroScan.AI Engine running in direct high-speed in-process mode.")
+                return True
+        except Exception as e:
+            logger.debug(f"Direct engine check: {e}")
+        return False
 
     def health_check(self) -> Tuple[bool, Dict[str, Any]]:
         """
-        Fast health check. If in direct mode, returns instantaneously without network blocking.
+        Fast health check. Guaranteed instantaneous response when direct model is available.
         """
-        if self._use_direct and self._direct_yolo:
+        if self._ensure_direct_engine() and self._direct_yolo:
             return True, {
                 "status": "healthy",
                 "model_loaded": True,
                 "model_path": self._direct_yolo.model_path,
                 "classes": self._direct_yolo.get_class_list(),
-                "mode": "standalone"
+                "mode": "in-process"
             }
 
-        # If base_url is configured or direct was not initialized:
-        target_url = self.base_url or "http://127.0.0.1:8000"
-        try:
-            import requests
-            url = f"{target_url}/health"
-            res = requests.get(url, timeout=0.8)
-            if res.status_code == 200:
-                data = res.json()
-                return data.get("model_loaded", False), data
-            return False, {"error": f"HTTP {res.status_code}"}
-        except Exception as e:
-            # Fallback to direct YOLO service
+        # If direct model is unavailable and an external base_url is configured:
+        if self.base_url and not ("127.0.0.1" in self.base_url or "localhost" in self.base_url):
             try:
-                from backend.services.yolo_service import get_yolo_service
-                svc = get_yolo_service()
-                if svc.is_loaded():
-                    self._direct_yolo = svc
-                    self._use_direct = True
-                    return True, {
-                        "status": "healthy",
-                        "model_loaded": True,
-                        "model_path": svc.model_path,
-                        "classes": svc.get_class_list(),
-                        "mode": "standalone"
-                    }
-            except Exception:
-                pass
-            return False, {"error": str(e)}
+                import requests
+                url = f"{self.base_url}/health"
+                res = requests.get(url, timeout=1.5)
+                if res.status_code == 200:
+                    data = res.json()
+                    return data.get("model_loaded", False), data
+                return False, {"error": f"HTTP {res.status_code}"}
+            except Exception as e:
+                return False, {"error": str(e)}
+
+        return False, {"error": "NeuroScan.AI YOLO model weights not found locally."}
 
     def predict_image(
         self,
@@ -82,49 +72,39 @@ class APIClient:
     ) -> Tuple[bool, Dict[str, Any]]:
         """
         Perform high-speed YOLOv8 brain tumor detection.
-        Executes in-process (sub-35ms) if available; otherwise calls remote microservice.
+        Executes in-process (sub-35ms) directly, eliminating network hops and timeouts.
         """
-        # 1. Fast-path in-process inference (instant, zero network latency)
-        if self._use_direct and self._direct_yolo:
+        # 1. Primary: Ultra-fast in-process inference
+        if self._ensure_direct_engine() and self._direct_yolo:
             try:
                 res = self._direct_yolo.predict(image_bytes=image_bytes, conf_threshold=confidence)
                 return True, res
             except Exception as direct_err:
-                logger.error(f"In-process prediction error: {direct_err}")
-                return False, {"error": str(direct_err)}
+                logger.error(f"In-process prediction error: {direct_err}", exc_info=True)
+                return False, {"error": f"Inference error: {str(direct_err)}"}
 
-        # 2. Remote API path
-        target_url = self.base_url or "http://127.0.0.1:8000"
-        mime_type = "image/png" if filename.lower().endswith(".png") else "image/jpeg"
-        
-        try:
-            import requests
-            url = f"{target_url}/predict"
-            files = {"file": (filename, image_bytes, mime_type)}
-            data = {"confidence": str(confidence)}
-            
-            res = requests.post(url, files=files, data=data, timeout=8)
-            if res.status_code == 200:
-                return True, res.json()
-            else:
-                try:
-                    err_msg = res.json().get("detail", f"HTTP {res.status_code}")
-                except Exception:
-                    err_msg = f"HTTP {res.status_code} Error"
-                return False, {"error": err_msg}
-        except Exception as net_err:
-            # Fallback to direct YOLOService
+        # 2. Secondary fallback: only if external API server is explicitly configured
+        if self.base_url and not ("127.0.0.1" in self.base_url or "localhost" in self.base_url):
+            mime_type = "image/png" if filename.lower().endswith(".png") else "image/jpeg"
             try:
-                from backend.services.yolo_service import get_yolo_service
-                svc = get_yolo_service()
-                if svc.is_loaded():
-                    self._direct_yolo = svc
-                    self._use_direct = True
-                    result = svc.predict(image_bytes=image_bytes, conf_threshold=confidence)
-                    return True, result
-            except Exception as direct_err:
-                logger.error(f"Direct inference fallback error: {direct_err}")
-            return False, {"error": f"Inference service unavailable: {str(net_err)}"}
+                import requests
+                url = f"{self.base_url}/predict"
+                files = {"file": (filename, image_bytes, mime_type)}
+                data = {"confidence": str(confidence)}
+                
+                res = requests.post(url, files=files, data=data, timeout=5)
+                if res.status_code == 200:
+                    return True, res.json()
+                else:
+                    try:
+                        err_msg = res.json().get("detail", f"HTTP {res.status_code}")
+                    except Exception:
+                        err_msg = f"HTTP {res.status_code} Error"
+                    return False, {"error": err_msg}
+            except Exception as net_err:
+                return False, {"error": f"Inference service connection error: {str(net_err)}"}
+
+        return False, {"error": "Local NeuroScan.AI model could not be loaded. Please ensure model/best.pt exists."}
 
     def submit_contact(
         self,
