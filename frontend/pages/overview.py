@@ -8,7 +8,6 @@ from frontend.components.cards import render_top_header, render_kpi_card, render
 from frontend.components.sample_selector import get_verified_samples
 from frontend.services.api_client import get_api_client
 from frontend.components.result_panel import base64_to_bytes
-from frontend.components.contact_form import render_contact_form
 from frontend.components.icons import get_svg_icon
 
 def render_overview_page(is_api_connected: bool):
@@ -329,8 +328,26 @@ def render_overview_page(is_api_connected: bool):
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
-    # --- 5. NURA-INSPIRED CONSULTATION & CONTACT SECTION ---
-    render_contact_form()
+    # --- 5. CLINICAL CONSULTATION CTA (LINKS TO DEDICATED CONTACT PAGE) ---
+    st.markdown(f"""
+        <div class="kpi-card" style="padding: 28px 24px; text-align: center; margin-bottom: 20px;">
+            <div style="margin-bottom: 8px;">
+                {get_svg_icon('contact', size=32, color='var(--primary)')}
+            </div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--navy-header); margin-bottom: 6px;">
+                Clinical Collaboration &amp; Institutional Screening
+            </div>
+            <div style="font-size: 0.86rem; color: var(--text-secondary); max-width: 560px; margin: 0 auto 16px auto; line-height: 1.6;">
+                Interested in evaluating NeuroScan.AI for multi-center hospital screening, pilot second-reader deployments, or research datasets? Connect directly with our team.
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    col_cta1, col_cta2, col_cta3 = st.columns([1, 1.4, 1])
+    with col_cta2:
+        if st.button("Open Clinical Consultation Portal ➔", type="primary", use_container_width=True):
+            st.session_state["current_page"] = "Contact Us"
+            st.rerun()
 
     render_disclaimer()
     render_footer()
