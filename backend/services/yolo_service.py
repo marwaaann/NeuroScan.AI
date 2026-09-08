@@ -68,16 +68,21 @@ class YOLOService:
         self._initialized = True
 
     def _resolve_model_path(self) -> str:
-        """Find model/best.pt across all known local and container paths"""
+        """Find best.onnx or best.pt across all known local and container paths"""
         curr_dir = os.path.dirname(os.path.abspath(__file__))
         backend_dir = os.path.dirname(curr_dir)
         project_root = os.path.dirname(backend_dir)
 
         possible_paths = [
+            os.path.join(project_root, 'model', 'best.onnx'),
             os.path.join(project_root, 'model', 'best.pt'),
+            os.path.join(os.getcwd(), 'model', 'best.onnx'),
             os.path.join(os.getcwd(), 'model', 'best.pt'),
+            os.path.join(os.getcwd(), 'brain_tumor_project', 'model', 'best.onnx'),
             os.path.join(os.getcwd(), 'brain_tumor_project', 'model', 'best.pt'),
+            '/app/model/best.onnx',
             '/app/model/best.pt',
+            'model/best.onnx',
             'model/best.pt',
             os.path.join(project_root, 'brain_tumor_detector', 'yolov8n_run_1', 'weights', 'best.pt'),
             os.path.join(project_root, 'yolov8n.pt'),
@@ -104,8 +109,11 @@ class YOLOService:
             return False
 
         try:
-            logger.info(f"Loading YOLOv8 model from {self.model_path}...")
-            self.model = YOLO(self.model_path)
+            logger.info(f"Loading YOLO model from {self.model_path}...")
+            if self.model_path.endswith('.onnx'):
+                self.model = YOLO(self.model_path, task='detect')
+            else:
+                self.model = YOLO(self.model_path)
             
             # Sync model class names if available
             if hasattr(self.model, 'names') and isinstance(self.model.names, dict):
@@ -131,7 +139,7 @@ class YOLOService:
         """
         if not self.is_loaded():
             if not self.load_model():
-                raise RuntimeError("YOLO model is not loaded. Please verify model/best.pt exists.")
+                raise RuntimeError("YOLO model is not loaded. Please verify model/best.pt or model/best.onnx exists.")
 
         # Robust multi-format image loading, normalization, and memory downsampling
         try:
@@ -146,9 +154,17 @@ class YOLOService:
         except Exception as e:
             raise ValueError(f"Invalid cranial image content: {str(e)}")
 
-        # Run inference in zero-overhead inference mode with single thread
+        # Run inference in zero-overhead mode with single thread
         try:
-            if torch is not None:
+            if self.model_path.endswith('.onnx'):
+                results = self.model.predict(
+                    source=pil_img,
+                    conf=conf_threshold,
+                    save=False,
+                    verbose=False,
+                    imgsz=640
+                )
+            elif torch is not None:
                 with torch.inference_mode():
                     results = self.model.predict(
                         source=pil_img,
