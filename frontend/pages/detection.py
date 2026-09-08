@@ -9,6 +9,7 @@ from frontend.components.cards import render_top_header, render_workflow_steps, 
 from frontend.components.sample_selector import render_sample_selector, get_verified_samples
 from frontend.components.result_panel import render_result_panel
 from frontend.services.api_client import get_api_client
+from frontend.components.icons import get_svg_icon
 
 def render_detection_page(is_api_connected: bool):
     """
@@ -97,14 +98,14 @@ def render_detection_page(is_api_connected: bool):
 
         can_analyze = active_bytes is not None
         run_analysis = st.button(
-            "🚀 Run Tumor Detection",
+            "Run Tumor Detection ➔",
             type="primary",
             disabled=not can_analyze,
             use_container_width=True
         )
 
         if can_analyze:
-            if st.button("🔄 Clear Current Scan", use_container_width=True, type="secondary"):
+            if st.button("Clear Current Scan", use_container_width=True, type="secondary"):
                 if "last_bytes" in st.session_state:
                     del st.session_state["last_bytes"]
                 if "last_filename" in st.session_state:
@@ -116,9 +117,10 @@ def render_detection_page(is_api_connected: bool):
     with col_right:
         # State A: Empty State
         if not active_bytes and "last_pred" not in st.session_state:
-            st.markdown("""
+            scan_svg = get_svg_icon("scan", size=48, color="var(--text-muted)")
+            st.markdown(f"""
                 <div class="kpi-card" style="text-align: center; padding: 60px 24px;">
-                    <div style="font-size: 3rem; margin-bottom: 12px;">🧠</div>
+                    <div style="margin-bottom: 14px;">{scan_svg}</div>
                     <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
                         No Scan Loaded Yet
                     </div>
@@ -149,9 +151,9 @@ def render_detection_page(is_api_connected: bool):
         if run_analysis and active_bytes:
             # Scanning Animation Status
             with st.spinner("Analyzing cranial MRI scan with YOLOv8..."):
-                st.markdown("""
+                st.markdown(f"""
                     <div class="scanning-box">
-                        <div class="scanning-pulse-circle">🔬</div>
+                        <div class="scanning-pulse-circle">{get_svg_icon('scan', size=36, color='var(--primary)')}</div>
                         <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary);">
                             Analyzing Cranial MRI Scan...
                         </div>

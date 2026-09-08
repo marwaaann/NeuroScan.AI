@@ -1,11 +1,20 @@
 [client]
 toolbarMode = "minimal"
-showErrorDetails = true
+showErrorDetails = false
 showSidebarNavigation = false
 
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+maxUploadSize = 25
+
 [theme]
-primaryColor = "#0284C7"
+primaryColor = "#00A896"
 backgroundColor = "#F8FAFC"
 secondaryBackgroundColor = "#FFFFFF"
-textColor = "#0F172A"
+textColor = "#0B2545"
 font = "sans serif"

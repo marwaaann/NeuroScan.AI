@@ -36,6 +36,8 @@ def render_confidence_meter(confidence: float):
         </div>
     """, unsafe_allow_html=True)
 
+from frontend.components.icons import get_svg_icon
+
 def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
     """Render comprehensive clinical diagnostic result panel"""
     count = pred.get("count", 0)
@@ -45,14 +47,17 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
     if count > 0:
         primary_tumor = detections[0]["class_name"]
         primary_conf = detections[0]["confidence"] * 100
+        alert_svg = get_svg_icon("alert", size=22, color="var(--danger)")
         
         st.markdown(f"""
             <div class="result-banner-box result-banner-positive">
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <div class="result-primary-title">🚨 {primary_tumor} Detected</div>
+                        <div class="result-primary-title" style="display: flex; align-items: center; gap: 8px;">
+                            {alert_svg} <span>{primary_tumor} Detected</span>
+                        </div>
                         <div class="result-primary-subtitle">
-                            Localized {count} abnormal region(s) in cranial MRI scan.
+                            Localized {count} abnormal lesion region(s) in cranial MRI scan.
                         </div>
                     </div>
                     <div style="text-align: right;">
@@ -65,11 +70,14 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
         """, unsafe_allow_html=True)
         render_confidence_meter(detections[0]["confidence"])
     else:
-        st.markdown("""
+        check_svg = get_svg_icon("check", size=22, color="var(--success)")
+        st.markdown(f"""
             <div class="result-banner-box result-banner-negative">
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
                     <div>
-                        <div class="result-primary-title">✅ No Tumor Detected</div>
+                        <div class="result-primary-title" style="display: flex; align-items: center; gap: 8px;">
+                            {check_svg} <span>No Lesion Detected</span>
+                        </div>
                         <div class="result-primary-subtitle">
                             No lesions exceeded the selected confidence threshold in this scan.
                         </div>
@@ -142,7 +150,7 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
     with exp_c1:
         if ann_bytes:
             st.download_button(
-                label="📥 Download Annotated Image (PNG)",
+                label="Download Annotated Image (PNG)",
                 data=ann_bytes,
                 file_name=f"nuroscan_annotated_{filename}.png",
                 mime="image/png",
@@ -160,7 +168,7 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
             "disclaimer": "Research and educational tool only. Not for clinical diagnosis."
         }
         st.download_button(
-            label="📄 Download Clinical Summary (JSON)",
+            label="Download Clinical Summary (JSON)",
             data=json.dumps(report_data, indent=2),
             file_name=f"nuroscan_report_{filename}.json",
             mime="application/json",
@@ -168,5 +176,5 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
             type="secondary"
         )
 
-    with st.expander("🔍 Inspect Raw Model Payload (JSON)"):
+    with st.expander("Inspect Raw Inference Telemetry (JSON)"):
         st.code(json.dumps(pred, indent=2), language="json")

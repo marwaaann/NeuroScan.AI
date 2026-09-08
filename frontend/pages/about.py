@@ -1,5 +1,6 @@
 import streamlit as st
 from frontend.components.cards import render_top_header, render_disclaimer, render_footer
+from frontend.components.icons import get_svg_icon
 
 def render_about_page():
     """
@@ -16,7 +17,7 @@ def render_about_page():
     col1, col2 = st.columns([1.6, 1.2], gap="large")
 
     with col1:
-        st.markdown("### 📄 Research Paper Publication")
+        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('paper', size=22, color='var(--primary)')} Research Paper Publication</span>", unsafe_allow_html=True)
         st.markdown("""
             <div class="kpi-card" style="padding: 24px; margin-bottom: 20px;">
                 <div style="font-size: 1.18rem; font-weight: 800; color: var(--navy-header); margin-bottom: 8px;">
@@ -44,7 +45,7 @@ def render_about_page():
             </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("### 🔬 Multi-Planar Dataset & Methodology")
+        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('sensitivity', size=22, color='var(--primary)')} Multi-Planar Dataset &amp; Methodology</span>", unsafe_allow_html=True)
         st.markdown("""
             <div class="kpi-card" style="padding: 24px; margin-bottom: 20px;">
                 <div style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65;">
@@ -62,7 +63,7 @@ def render_about_page():
             </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("### 🔮 Future Research Directions")
+        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('precision', size=22, color='var(--primary)')} Future Research Directions</span>", unsafe_allow_html=True)
         st.markdown("""
             <div class="kpi-card" style="padding: 24px;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 0.86rem; color: var(--text-secondary);">
@@ -87,7 +88,7 @@ def render_about_page():
         """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown("### 👥 Research Authors (IIIT Sonepat)")
+        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('users', size=22, color='var(--primary)')} Research Authors (IIIT Sonepat)</span>", unsafe_allow_html=True)
         st.markdown("""
             <div class="kpi-card" style="padding: 24px; margin-bottom: 20px;">
                 <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
@@ -119,33 +120,35 @@ def render_about_page():
             </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("### 🔗 Project & Deployment Links")
+        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('link', size=22, color='var(--primary)')} Project &amp; Deployment Links</span>", unsafe_allow_html=True)
         st.markdown("""
             <div class="kpi-card" style="padding: 24px; margin-bottom: 20px;">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <a href="https://github.com/marwaaann/NeuroScan.AI" target="_blank" style="text-decoration: none;">
                         <div style="background: var(--surface-elevated); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: var(--primary);">
-                            🐙 GitHub Repository (marwaaann/NeuroScan.AI) ➔
+                            GitHub Repository (marwaaann/NeuroScan.AI) ➔
                         </div>
                     </a>
                     <a href="https://neuroscan-ai-lp16.onrender.com" target="_blank" style="text-decoration: none;">
                         <div style="background: var(--surface-elevated); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: var(--navy-header);">
-                            🚀 Primary Cloud Deployment (Render) ➔
+                            Primary Cloud Deployment (Render) ➔
                         </div>
                     </a>
                     <a href="https://neuroscanai-ahwmpetaryjhq9pm3qv4et.streamlit.app" target="_blank" style="text-decoration: none;">
                         <div style="background: var(--surface-elevated); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: var(--navy-header);">
-                            ⚡ Streamlit Cloud App ➔
+                            Streamlit Cloud App ➔
                         </div>
                     </a>
                 </div>
             </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("### 🏥 Clinical Consultation")
-        st.markdown("""
+        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('stethoscope', size=22, color='var(--primary)')} Clinical Consultation</span>", unsafe_allow_html=True)
+        st.markdown(f"""
             <div class="kpi-card" style="padding: 20px; text-align: center;">
-                <div style="font-size: 1.8rem; margin-bottom: 6px;">🩺</div>
+                <div style="margin-bottom: 10px;">
+                    {get_svg_icon('stethoscope', size=32, color='var(--primary)')}
+                </div>
                 <div style="font-weight: 700; color: var(--navy-header); margin-bottom: 6px;">
                     Schedule a Consultation
                 </div>
@@ -160,3 +163,4 @@ def render_about_page():
 
     render_disclaimer()
     render_footer()
+

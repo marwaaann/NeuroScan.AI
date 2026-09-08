@@ -1,5 +1,6 @@
 import streamlit as st
 from typing import List, Optional
+from frontend.components.icons import get_svg_icon
 
 def render_top_header(title: str, description: str, meta_text: str = "", badges: Optional[List[str]] = None):
     """Render consistent clinical page header with typography and technology badges"""
@@ -18,14 +19,18 @@ def render_top_header(title: str, description: str, meta_text: str = "", badges:
         </div>
     """, unsafe_allow_html=True)
 
-def render_kpi_card(label: str, value: str, subtext: str = "", icon: str = "📊"):
-    """Render modern clinical KPI statistic card with icon and elevation"""
+def render_kpi_card(label: str, value: str, subtext: str = "", icon_name: str = "analytics"):
+    """Render modern clinical KPI statistic card with crisp SVG icon and elevation"""
+    svg_icon = get_svg_icon(icon_name, size=18, color="var(--primary)")
+    if not svg_icon:
+        svg_icon = get_svg_icon("analytics", size=18, color="var(--primary)")
+
     st.markdown(f"""
         <div class="kpi-card">
             <div>
                 <div class="kpi-header">
                     <span class="kpi-label">{label}</span>
-                    <div class="kpi-icon-pill">{icon}</div>
+                    <div class="kpi-icon-pill">{svg_icon}</div>
                 </div>
                 <div class="kpi-value">{value}</div>
             </div>
@@ -58,10 +63,13 @@ def render_workflow_steps(current_step: int = 1):
     st.markdown(html, unsafe_allow_html=True)
 
 def render_disclaimer():
-    """Render restrained, authoritative medical research disclaimer"""
-    st.markdown("""
+    """Render restrained, authoritative medical research disclaimer with clean SVG icon"""
+    alert_icon = get_svg_icon("alert", size=16, color="var(--warning)")
+    st.markdown(f"""
         <div class="disclaimer-card">
-            <div class="disclaimer-header">⚠️ Research &amp; Educational Tool — Not a Medical Diagnosis</div>
+            <div class="disclaimer-header">
+                <span style="display: inline-flex; align-items: center; gap: 6px;">{alert_icon} Research &amp; Educational Tool — Not a Medical Diagnosis</span>
+            </div>
             <div class="disclaimer-body">
                 Nuroscan provides deep learning bounding-box detection to assist scientific and educational research.
                 Model inferences are probabilistic and must never replace diagnostic evaluation by a licensed physician or board-certified radiologist.

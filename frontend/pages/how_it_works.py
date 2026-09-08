@@ -1,5 +1,6 @@
 import streamlit as st
 from frontend.components.cards import render_top_header, render_disclaimer, render_footer
+from frontend.components.icons import get_svg_icon
 
 def render_how_it_works_page():
     """
@@ -30,25 +31,26 @@ def render_how_it_works_page():
     st.markdown("### The 6-Stage Research Methodology Pipeline")
 
     stages = [
-        ("1. Multi-Planar MRI Acquisition & Standardization", "🖼️", 
+        ("1. Multi-Planar MRI Acquisition & Standardization", "scan", 
          "Cranial scans from open-access repositories (including Kaggle Brain Tumor MRI Dataset) across three planes (axial, sagittal, coronal) are collected. All images are transformed from grayscale to standardized 640×640 RGB tensors."),
-        ("2. Pixel Normalization & Gradient Stability", "⚖️",
+        ("2. Pixel Normalization & Gradient Stability", "precision",
          "Pixel intensity values are rescaled into the [0, 1] range. This prevents large gradient fluctuations during backpropagation, directing the model to learn structural morphology, texture, and boundary features rather than lighting variations."),
-        ("3. Robust Data Augmentation & Balancing", "🔄",
+        ("3. Robust Data Augmentation & Balancing", "workflow",
          "Techniques including random horizontal/vertical flips, minor rotations (±15°), contrast adjustments, Gaussian noise injection, and minority class oversampling (e.g. for Pituitary adenomas) are applied to boost generalization on unseen scanner data."),
-        ("4. Deep Feature Extraction (Backbone & PANet)", "🔬",
+        ("4. Deep Feature Extraction (Backbone & PANet)", "analytics",
          "Multi-scale feature extraction combines spatial resolution with high-level contextual semantics, allowing detection of both minute incipient lesions and large compressive infiltrative tumors."),
-        ("5. Decoupled Prediction Heads & NMS", "⚡",
+        ("5. Decoupled Prediction Heads & NMS", "speed",
          "Separate regression and classification heads output bounding coordinates and class confidence scores. Non-Maximum Suppression (NMS) eliminates overlapping duplicate proposals to isolate the true lesion boundary."),
-        ("6. Clinical Diagnostic Overlay & Metric Export", "📊",
+        ("6. Clinical Diagnostic Overlay & Metric Export", "check",
          "Real-time visual bounding box overlays are generated with color-coded classification tags (Glioma, Meningioma, Pituitary, Normal) along with confidence percentages and inference latency measurements.")
     ]
 
-    for title, icon, desc in stages:
+    for title, icon_key, desc in stages:
+        svg_code = get_svg_icon(icon_key, size=22, color="var(--primary)")
         st.markdown(f"""
             <div class="kpi-card" style="padding: 20px; margin-bottom: 12px;">
-                <div style="display: flex; align-items: flex-start; gap: 14px;">
-                    <div style="font-size: 1.8rem; line-height: 1;">{icon}</div>
+                <div style="display: flex; align-items: flex-start; gap: 16px;">
+                    <div class="kpi-icon-pill" style="min-width: 40px; min-height: 40px;">{svg_code}</div>
                     <div>
                         <div style="font-size: 1.05rem; font-weight: 700; color: var(--navy-header); margin-bottom: 4px;">{title}</div>
                         <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55;">{desc}</div>

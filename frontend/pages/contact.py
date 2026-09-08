@@ -1,10 +1,12 @@
 import streamlit as st
 from frontend.components.cards import render_top_header, render_disclaimer, render_footer
 from frontend.components.contact_form import render_contact_form
+from frontend.components.icons import get_svg_icon
 
 def render_contact_page():
     """
     Renders the dedicated Contact & Consultation page inspired by NURA health screening centers.
+    Uses crisp SVG icons and responsive cards.
     """
     render_top_header(
         title="Clinical Consultation & Inquiry",
@@ -15,9 +17,9 @@ def render_contact_page():
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.markdown("""
+        st.markdown(f"""
             <div class="kpi-card" style="padding: 20px;">
-                <div style="font-size: 1.8rem; margin-bottom: 8px;">🏥</div>
+                <div class="kpi-icon-pill" style="margin-bottom: 12px;">{get_svg_icon("scan", size=20, color="var(--primary)")}</div>
                 <div style="font-size: 1.05rem; font-weight: 700; color: var(--navy-header); margin-bottom: 4px;">
                     Clinical Screening
                 </div>
@@ -27,9 +29,9 @@ def render_contact_page():
             </div>
         """, unsafe_allow_html=True)
     with c2:
-        st.markdown("""
+        st.markdown(f"""
             <div class="kpi-card" style="padding: 20px;">
-                <div style="font-size: 1.8rem; margin-bottom: 8px;">🔬</div>
+                <div class="kpi-icon-pill" style="margin-bottom: 12px;">{get_svg_icon("analytics", size=20, color="var(--primary)")}</div>
                 <div style="font-size: 1.05rem; font-weight: 700; color: var(--navy-header); margin-bottom: 4px;">
                     Academic Research
                 </div>
@@ -39,9 +41,9 @@ def render_contact_page():
             </div>
         """, unsafe_allow_html=True)
     with c3:
-        st.markdown("""
+        st.markdown(f"""
             <div class="kpi-card" style="padding: 20px;">
-                <div style="font-size: 1.8rem; margin-bottom: 8px;">⚡</div>
+                <div class="kpi-icon-pill" style="margin-bottom: 12px;">{get_svg_icon("workflow", size=20, color="var(--primary)")}</div>
                 <div style="font-size: 1.05rem; font-weight: 700; color: var(--navy-header); margin-bottom: 4px;">
                     API &amp; Integration
                 </div>

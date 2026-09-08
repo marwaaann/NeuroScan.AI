@@ -9,6 +9,7 @@ from frontend.components.sample_selector import get_verified_samples
 from frontend.services.api_client import get_api_client
 from frontend.components.result_panel import base64_to_bytes
 from frontend.components.contact_form import render_contact_form
+from frontend.components.icons import get_svg_icon
 
 def render_overview_page(is_api_connected: bool):
     """
@@ -33,10 +34,10 @@ def render_overview_page(is_api_connected: bool):
                 instantaneous lesion localization and multi-class classification in under 35 milliseconds.
             </div>
             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
-                <span class="tech-badge" style="background: rgba(0, 168, 150, 0.12); color: #007E70; border-color: rgba(0, 168, 150, 0.3);">⚡ 92 FPS Inference Speed</span>
-                <span class="tech-badge" style="background: rgba(2, 132, 199, 0.12); color: #0284C7; border-color: rgba(2, 132, 199, 0.3);">🧠 7,500+ MRI Training Cohort</span>
-                <span class="tech-badge" style="background: rgba(16, 185, 129, 0.12); color: #059669; border-color: rgba(16, 185, 129, 0.3);">🎯 95% Overall System Accuracy</span>
-                <span class="tech-badge" style="background: rgba(99, 102, 241, 0.12); color: #4F46E5; border-color: rgba(99, 102, 241, 0.3);">🌐 3 Anatomical Planes (Axial, Sagittal, Coronal)</span>
+                <span class="tech-badge" style="background: rgba(0, 168, 150, 0.12); color: #007E70; border-color: rgba(0, 168, 150, 0.3);">92 FPS Real-Time Speed</span>
+                <span class="tech-badge" style="background: rgba(2, 132, 199, 0.12); color: #0284C7; border-color: rgba(2, 132, 199, 0.3);">7,500+ MRI Training Cohort</span>
+                <span class="tech-badge" style="background: rgba(16, 185, 129, 0.12); color: #059669; border-color: rgba(16, 185, 129, 0.3);">95% System Accuracy</span>
+                <span class="tech-badge" style="background: rgba(99, 102, 241, 0.12); color: #4F46E5; border-color: rgba(99, 102, 241, 0.3);">3 Planes (Axial, Sagittal, Coronal)</span>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -44,15 +45,15 @@ def render_overview_page(is_api_connected: bool):
     # Hero Action Buttons
     c_btn1, c_btn2, c_btn3 = st.columns([1.3, 1.3, 1.4])
     with c_btn1:
-        if st.button("🔬 Open Full MRI Analyzer ➔", type="primary", use_container_width=True):
+        if st.button("Open Full MRI Analyzer ➔", type="primary", use_container_width=True):
             st.session_state["current_page"] = "MRI Detection"
             st.rerun()
     with c_btn2:
-        if st.button("📈 Explore Model Analytics ➔", type="secondary", use_container_width=True):
+        if st.button("Explore Model Analytics ➔", type="secondary", use_container_width=True):
             st.session_state["current_page"] = "Model Analytics"
             st.rerun()
     with c_btn3:
-        if st.button("📞 Request Consultation ➔", type="secondary", use_container_width=True):
+        if st.button("Request Consultation ➔", type="secondary", use_container_width=True):
             st.session_state["current_page"] = "Contact Us"
             st.rerun()
 
@@ -99,11 +100,11 @@ def render_overview_page(is_api_connected: bool):
         st.markdown("<div style='height: 14px'></div>", unsafe_allow_html=True)
         k1, k2, k3 = st.columns(3)
         with k1:
-            render_kpi_card("PRECISION", "96.0%", "Low False-Positive Rate", "🎯")
+            render_kpi_card("PRECISION", "96.0%", "Low False-Positive Rate", "precision")
         with k2:
-            render_kpi_card("RECALL (SENSITIVITY)", "94.0%", "High Lesion Catch Rate", "⚡")
+            render_kpi_card("RECALL (SENSITIVITY)", "94.0%", "High Lesion Catch Rate", "sensitivity")
         with k3:
-            render_kpi_card("INFERENCE RATE", "92 FPS", "~32 ms per cranial slice", "⏱️")
+            render_kpi_card("INFERENCE RATE", "92 FPS", "~32 ms per cranial slice", "speed")
 
         st.markdown("<div style='height: 12px'></div>", unsafe_allow_html=True)
         st.markdown("""
@@ -116,7 +117,7 @@ def render_overview_page(is_api_connected: bool):
     st.markdown("<br/>", unsafe_allow_html=True)
 
     # --- 3. INTERACTIVE LIVE SCAN SANDBOX ---
-    st.markdown("### 🧪 Interactive Scan Sandbox")
+    st.markdown("### Interactive Scan Sandbox")
     st.markdown("""
         <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px;">
             Test the YOLOv8 model immediately right here on the dashboard without uploading files.
@@ -152,7 +153,7 @@ def render_overview_page(is_api_connected: bool):
                 key="sandbox_conf"
             )
 
-            run_sandbox = st.button("⚡ Run Instant Detection", type="primary", use_container_width=True)
+            run_sandbox = st.button("Run Instant Detection ➔", type="primary", use_container_width=True)
 
         with sandbox_col_right:
             st.markdown("#### 2. AI Localization Output")
@@ -186,21 +187,21 @@ def render_overview_page(is_api_connected: bool):
                     conf_pct = top_det["confidence"] * 100
                     st.markdown(f"""
                         <div class="result-banner-box result-banner-positive" style="padding: 16px; margin-bottom: 12px;">
-                            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
-                                🚨 {top_det['class_name']} Detected ({conf_pct:.1f}%)
+                            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                                {get_svg_icon('alert', size=22, color='#DC2626')} {top_det['class_name']} Detected ({conf_pct:.1f}%)
                             </div>
-                            <div style="font-size: 0.82rem; color: var(--text-secondary);">
+                            <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">
                                 Localized {count} lesion region(s) in {st.session_state.get('sandbox_name', 'MRI Scan')}.
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
                 else:
-                    st.markdown("""
+                    st.markdown(f"""
                         <div class="result-banner-box result-banner-negative" style="padding: 16px; margin-bottom: 12px;">
-                            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
-                                ✅ No Lesion Detected
+                            <div style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                                {get_svg_icon('check', size=22, color='#059669')} No Lesion Detected
                             </div>
-                            <div style="font-size: 0.82rem; color: var(--text-secondary);">
+                            <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">
                                 Tissue appears healthy above current confidence threshold.
                             </div>
                         </div>
@@ -217,9 +218,9 @@ def render_overview_page(is_api_connected: bool):
                     st.session_state["current_page"] = "MRI Detection"
                     st.rerun()
             else:
-                st.markdown("""
+                st.markdown(f"""
                     <div class="kpi-card" style="text-align: center; padding: 48px 20px;">
-                        <div style="font-size: 2.5rem; margin-bottom: 8px;">🔬</div>
+                        <div style="margin-bottom: 12px;">{get_svg_icon('scan', size=42, color='var(--primary)')}</div>
                         <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
                             Sandbox Awaiting Execution
                         </div>
@@ -232,18 +233,18 @@ def render_overview_page(is_api_connected: bool):
     st.markdown("<br/>", unsafe_allow_html=True)
 
     # --- 4. INTERACTIVE TUMOR CLASS EXPLORER ---
-    st.markdown("### 🧠 Interactive Classification Reference")
+    st.markdown("### Pathology Classification Reference")
     st.markdown("""
         <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 14px;">
-            Select a diagnosis class below to explore clinical pathology and diagnostic visual features.
+            Select a diagnostic class below to explore clinical pathology, visual biomarkers, and model accuracy.
         </div>
     """, unsafe_allow_html=True)
 
     tab_glioma, tab_mening, tab_pituit, tab_normal = st.tabs([
-        "🔬 Glioma",
-        "🛡️ Meningioma",
-        "🎯 Pituitary",
-        "✅ No Tumor (Normal)"
+        "Glioma (Class 0)",
+        "Meningioma (Class 1)",
+        "Pituitary Adenoma (Class 3)",
+        "Healthy Tissue (Class 2)"
     ])
 
     with tab_glioma:

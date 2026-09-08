@@ -31,13 +31,13 @@ def render_analytics_page():
     # Top KPI Metrics Overview
     k1, k2, k3, k4 = st.columns(4)
     with k1:
-        render_kpi_card("VALIDATION mAP@50", "96.31%", "Mean Average Precision at IoU 0.50", "🎯")
+        render_kpi_card("VALIDATION mAP@50", "96.31%", "Mean Average Precision at IoU 0.50", "precision")
     with k2:
-        render_kpi_card("mAP@50-95", "79.46%", "mAP across IoU 0.50:0.95 range", "📐")
+        render_kpi_card("mAP@50-95", "79.46%", "mAP across IoU 0.50:0.95 range", "analytics")
     with k3:
-        render_kpi_card("PRECISION", "93.87%", "Bounding Box Precision", "🔬")
+        render_kpi_card("PRECISION", "93.87%", "Bounding Box Precision", "check")
     with k4:
-        render_kpi_card("RECALL", "94.01%", "Lesion Detection Sensitivity", "⚡")
+        render_kpi_card("RECALL", "94.01%", "Lesion Detection Sensitivity", "speed")
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
@@ -47,10 +47,10 @@ def render_analytics_page():
         cm_path = resolve_asset_path("confusion_matrix.png")
 
     tab1, tab2, tab3, tab4 = st.tabs([
-        "📈 Validation Curves",
-        "📉 Loss Telemetry",
-        "🎯 Confusion Matrix",
-        "📖 Metrics Guide"
+        "Validation Curves",
+        "Loss Telemetry",
+        "Confusion Matrix",
+        "Metrics Guide"
     ])
 
     with tab1:

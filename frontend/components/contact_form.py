@@ -39,7 +39,7 @@ def render_contact_form(compact: bool = False):
             c3, c4 = st.columns([1, 1])
             with c3:
                 phone = st.text_input(
-                    "🇮🇳 +91 Phone Number *",
+                    "+91 Phone Number *",
                     placeholder="+91 Phone Number",
                     help="Enter your 10-digit mobile number with +91 country code"
                 )
@@ -114,9 +114,9 @@ def render_contact_form(compact: bool = False):
                     if success:
                         contact_id = res.get("contact_id", "REF-#" + digits[-4:])
                         st.success(f"""
-                            🎉 **Inquiry Submitted Successfully! (Reference ID: #{contact_id})**  
+                            **Inquiry Submitted Successfully! (Reference ID: #{contact_id})**  
                             Thank you, **{clean_name}**. Your consultation request has been securely stored in the Nuroscan database.  
                             Our clinical specialist team ({location}) will review your request and reach out at `{clean_phone}` shortly.
                         """)
                     else:
-                        st.error(f"❌ Submission failed: {res.get('error', 'Unknown backend error')}")
+                        st.error(f"Submission failed: {res.get('error', 'Unknown backend error')}")
