@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List, Dict, Any
+from pydantic import BaseModel
+from typing import Optional
 
 from backend.services.contact_service import create_contact, get_contacts
 

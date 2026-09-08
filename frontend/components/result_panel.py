@@ -207,8 +207,10 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
             "application": "NeuroScan.AI",
             "version": "YOLOv8n-Medical",
             "filename": filename,
-            "detections_count": count,
-            "results": detections,
+            "is_tumor_detected": is_tumor,
+            "tumor_count": tumor_count,
+            "tumor_detections": tumor_dets,
+            "all_detections": pred.get("detections", []),
             "disclaimer": "Research and educational tool only. Not for clinical diagnosis."
         }
         st.download_button(

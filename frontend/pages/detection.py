@@ -18,9 +18,9 @@ def render_detection_page(is_api_connected: bool):
     """
     # Determine current workflow step
     current_step = 1
-    if "last_pred" in st.session_state and st.session_state.get("last_pred_scan_id"):
+    if "last_pred" in st.session_state and "active_bytes" in st.session_state:
         current_step = 3
-    elif "active_bytes" in st.session_state or "last_bytes" in st.session_state:
+    elif "active_bytes" in st.session_state:
         current_step = 2
 
     render_top_header(
@@ -41,8 +41,8 @@ def render_detection_page(is_api_connected: bool):
             with open(samples[0]["path"], "rb") as f:
                 st.session_state["active_bytes"] = f.read()
                 st.session_state["active_filename"] = os.path.basename(samples[0]["path"])
+            st.session_state["active_file_sig"] = f"sample_{st.session_state['active_filename']}"
             st.session_state.pop("last_pred", None)
-            st.session_state.pop("last_pred_scan_id", None)
         st.session_state["auto_load_sample"] = False
 
     with col_left:
@@ -62,13 +62,12 @@ def render_detection_page(is_api_connected: bool):
         # Check if user uploaded a file
         if uploaded_file is not None:
             up_bytes = uploaded_file.getvalue()
-            up_sig = f"{uploaded_file.name}_{uploaded_file.size}"
+            up_sig = f"upload_{uploaded_file.name}_{uploaded_file.size}"
             if st.session_state.get("active_file_sig") != up_sig:
                 st.session_state["active_file_sig"] = up_sig
                 st.session_state["active_bytes"] = up_bytes
                 st.session_state["active_filename"] = uploaded_file.name
                 st.session_state.pop("last_pred", None)
-                st.session_state.pop("last_pred_scan_id", None)
 
         # Visual sample selector
         selected_sample_path = render_sample_selector()
@@ -77,8 +76,8 @@ def render_detection_page(is_api_connected: bool):
                 st.session_state["active_bytes"] = f.read()
                 st.session_state["active_filename"] = os.path.basename(selected_sample_path)
             st.session_state["active_file_sig"] = f"sample_{st.session_state['active_filename']}"
+            st.session_state["uploader_version"] = uploader_version + 1
             st.session_state.pop("last_pred", None)
-            st.session_state.pop("last_pred_scan_id", None)
             st.rerun()
 
         st.markdown("---")
@@ -120,16 +119,9 @@ def render_detection_page(is_api_connected: bool):
                 st.session_state.pop("last_bytes", None)
                 st.session_state.pop("last_filename", None)
                 st.session_state.pop("last_pred", None)
-                st.session_state.pop("last_pred_scan_id", None)
                 st.rerun()
 
     with col_right:
-        scan_id = f"{active_filename}_{len(active_bytes)}" if active_bytes else None
-        has_results = (
-            "last_pred" in st.session_state and 
-            st.session_state.get("last_pred_scan_id") == scan_id
-        )
-
         # Process inference directly when button is clicked
         if run_analysis and active_bytes:
             with st.spinner("Analyzing cranial MRI scan with YOLOv8..."):
@@ -142,7 +134,6 @@ def render_detection_page(is_api_connected: bool):
 
                 if success:
                     st.session_state["last_pred"] = response_data
-                    st.session_state["last_pred_scan_id"] = scan_id
                     st.session_state["last_bytes"] = active_bytes
                     st.session_state["last_filename"] = active_filename
 
@@ -166,7 +157,7 @@ def render_detection_page(is_api_connected: bool):
                         "pred": response_data,
                         "bytes": active_bytes
                     })
-                    has_results = True
+                    st.rerun()
                 else:
                     st.error(f"Inference failed: {response_data.get('error', 'Unable to complete inference.')}")
 
@@ -186,7 +177,7 @@ def render_detection_page(is_api_connected: bool):
             """, unsafe_allow_html=True)
 
         # State 2: Results available for active scan
-        elif has_results and "last_pred" in st.session_state:
+        elif "last_pred" in st.session_state and active_bytes:
             render_result_panel(
                 pred=st.session_state["last_pred"],
                 orig_bytes=active_bytes,

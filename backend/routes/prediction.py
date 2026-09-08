@@ -1,5 +1,4 @@
 from fastapi import APIRouter, File, UploadFile, Form, HTTPException, status
-from typing import Optional
 import logging
 
 from backend.schemas.prediction import PredictResponse, HealthResponse

@@ -5,7 +5,6 @@ import base64
 import logging
 from typing import Dict, Any, List, Optional
 from PIL import Image, ImageOps
-import numpy as np
 
 # Suppress OpenMP/BLAS thread explosion and Ultralytics telemetry to guarantee ultra-low memory footprint (<250MB)
 os.environ["OMP_NUM_THREADS"] = "1"
