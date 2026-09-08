@@ -29,5 +29,7 @@ Thumbs.db
 uploads/
 results/
 
-# --- LOCAL DOCS ---
+# --- LOCAL DOCS & DATABASES ---
 *.pdf
+*.db
+backend/data/*.db

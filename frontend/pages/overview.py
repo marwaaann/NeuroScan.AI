@@ -8,32 +8,41 @@ from frontend.components.cards import render_top_header, render_kpi_card, render
 from frontend.components.sample_selector import get_verified_samples
 from frontend.services.api_client import get_api_client
 from frontend.components.result_panel import base64_to_bytes
+from frontend.components.contact_form import render_contact_form
 
 def render_overview_page(is_api_connected: bool):
     """
-    Render enhanced, highly interactive Nuroscan Clinical Dashboard
-    with live precision gauge, sandbox scan tester, and interactive class explorer.
+    Render NURA-inspired Nuroscan AI Brain Health Screening Dashboard
+    with live precision gauge, sandbox scan tester, research paper metrics,
+    and embedded consultation form.
     """
     render_top_header(
-        title="Nuroscan Clinical Dashboard",
-        description="High-precision computer vision platform for real-time brain MRI tumor localization & classification.",
-        meta_text="System Status: Operational • Model: YOLOv8n (PyTorch) • Tensor: 640 × 640 RGB",
-        badges=["YOLOv8n PyTorch", "FastAPI Microservice", "96.31% mAP@50", "Real-Time Inference"]
+        title="Nuroscan — AI Brain Health Screening Platform",
+        description="Automated cranial MRI brain tumor localization and multi-class screening powered by YOLO deep learning architectures.",
+        meta_text="Empirical Research: IIIT Sonepat (Rishabh, Marwan et al.) • 7,500+ Scans • 92 FPS Real-Time Inference",
+        badges=["NURA Clinical Screening", "IIIT Sonepat Research", "95% System Accuracy", "Multi-Planar MRI (Axial, Sagittal, Coronal)"]
     )
 
-    # --- 1. HERO BANNER ---
+    # --- 1. HERO BANNER (NURA HEALTHCARE AESTHETIC) ---
     st.markdown("""
         <div class="hero-banner-card">
-            <div class="hero-title">Welcome to Nuroscan</div>
+            <div class="hero-title">Precision AI Brain Health Screening</div>
             <div class="hero-description">
-                Nuroscan delivers automated bounding-box localization and classification of brain tumors 
-                (Glioma, Meningioma, Pituitary) from cranial MRI scans. Explore the interactive sandbox below or launch the dedicated analysis suite.
+                Inspired by modern preventative AI screening centers, Nuroscan combines state-of-the-art 
+                single-stage deep learning (YOLOv8 &amp; YOLOv11) with multi-planar cranial MRI analysis to deliver 
+                instantaneous lesion localization and multi-class classification in under 35 milliseconds.
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+                <span class="tech-badge" style="background: rgba(0, 168, 150, 0.12); color: #007E70; border-color: rgba(0, 168, 150, 0.3);">⚡ 92 FPS Inference Speed</span>
+                <span class="tech-badge" style="background: rgba(2, 132, 199, 0.12); color: #0284C7; border-color: rgba(2, 132, 199, 0.3);">🧠 7,500+ MRI Training Cohort</span>
+                <span class="tech-badge" style="background: rgba(16, 185, 129, 0.12); color: #059669; border-color: rgba(16, 185, 129, 0.3);">🎯 95% Overall System Accuracy</span>
+                <span class="tech-badge" style="background: rgba(99, 102, 241, 0.12); color: #4F46E5; border-color: rgba(99, 102, 241, 0.3);">🌐 3 Anatomical Planes (Axial, Sagittal, Coronal)</span>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
     # Hero Action Buttons
-    c_btn1, c_btn2, _ = st.columns([1.3, 1.4, 1.8])
+    c_btn1, c_btn2, c_btn3 = st.columns([1.3, 1.3, 1.4])
     with c_btn1:
         if st.button("🔬 Open Full MRI Analyzer ➔", type="primary", use_container_width=True):
             st.session_state["current_page"] = "MRI Detection"
@@ -42,35 +51,39 @@ def render_overview_page(is_api_connected: bool):
         if st.button("📈 Explore Model Analytics ➔", type="secondary", use_container_width=True):
             st.session_state["current_page"] = "Model Analytics"
             st.rerun()
+    with c_btn3:
+        if st.button("📞 Request Consultation ➔", type="secondary", use_container_width=True):
+            st.session_state["current_page"] = "Contact Us"
+            st.rerun()
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
     # --- 2. INTERACTIVE ACCURACY GAUGE & KPIS ---
-    st.markdown("### Empirical Performance Benchmarks")
+    st.markdown("### Empirical Performance Benchmarks (IIIT Sonepat Research)")
     col_gauge, col_kpis = st.columns([1.1, 2], gap="large")
 
     with col_gauge:
-        # Plotly Gauge Chart for mAP@50
+        # Plotly Gauge Chart for Overall Accuracy (95%)
         fig_gauge = go.Figure(go.Indicator(
             mode="gauge+number",
-            value=96.31,
-            number={'suffix': "%", 'font': {'size': 36, 'color': '#0284C7', 'family': 'Plus Jakarta Sans'}},
-            title={'text': "<b>Validation mAP@50</b><br><span style='font-size:0.8em;color:#64748B'>Mean Average Precision</span>", 'font': {'size': 14, 'family': 'Plus Jakarta Sans'}},
+            value=95.0,
+            number={'suffix': "%", 'font': {'size': 38, 'color': '#00A896', 'family': 'Plus Jakarta Sans'}},
+            title={'text': "<b>Overall System Accuracy</b><br><span style='font-size:0.8em;color:#627D98'>Empirical Validation (7,500+ Scans)</span>", 'font': {'size': 14, 'family': 'Plus Jakarta Sans'}},
             gauge={
                 'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#CBD5E1"},
-                'bar': {'color': "#0284C7", 'thickness': 0.28},
-                'bgcolor': "#F1F5F9",
+                'bar': {'color': "#00A896", 'thickness': 0.28},
+                'bgcolor': "#F1F7F6",
                 'borderwidth': 1,
                 'bordercolor': "#E2E8F0",
                 'steps': [
                     {'range': [0, 60], 'color': 'rgba(239, 68, 68, 0.15)'},
                     {'range': [60, 85], 'color': 'rgba(245, 158, 11, 0.15)'},
-                    {'range': [85, 100], 'color': 'rgba(16, 185, 129, 0.15)'}
+                    {'range': [85, 100], 'color': 'rgba(0, 168, 150, 0.15)'}
                 ],
                 'threshold': {
-                    'line': {'color': "#10B981", 'width': 3},
+                    'line': {'color': "#008C7D", 'width': 3},
                     'thickness': 0.75,
-                    'value': 96.31
+                    'value': 95.0
                 }
             }
         ))
@@ -86,17 +99,17 @@ def render_overview_page(is_api_connected: bool):
         st.markdown("<div style='height: 14px'></div>", unsafe_allow_html=True)
         k1, k2, k3 = st.columns(3)
         with k1:
-            render_kpi_card("PRECISION", "93.87%", "Low False-Positive Rate", "🎯")
+            render_kpi_card("PRECISION", "96.0%", "Low False-Positive Rate", "🎯")
         with k2:
-            render_kpi_card("RECALL", "94.01%", "High Tumor Sensitivity", "⚡")
+            render_kpi_card("RECALL (SENSITIVITY)", "94.0%", "High Lesion Catch Rate", "⚡")
         with k3:
-            render_kpi_card("LATENCY", "~32 ms", "Real-Time Inference", "⏱️")
+            render_kpi_card("INFERENCE RATE", "92 FPS", "~32 ms per cranial slice", "⏱️")
 
         st.markdown("<div style='height: 12px'></div>", unsafe_allow_html=True)
         st.markdown("""
             <div style="background: var(--surface-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 18px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
-                ⚡ <strong>YOLOv8 Single-Stage Backbone</strong> processes cranial MRI scans at 30+ frames per second, 
-                performing dual feature extraction and bounding-box regression simultaneously.
+                ⚡ <strong>Multi-Planar Dataset Cohort:</strong> Model evaluated on 7,000–8,000 axial, sagittal, and coronal MRI scans 
+                resized to 640×640. YOLO architecture executes single-pass bounding box regression and multi-class classification simultaneously.
             </div>
         """, unsafe_allow_html=True)
 
@@ -237,18 +250,18 @@ def render_overview_page(is_api_connected: bool):
         st.markdown("""
             <div class="kpi-card" style="padding: 24px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">Glioma (Class ID: 0)</div>
-                    <span class="pill-status" style="background: rgba(239, 68, 68, 0.15); color: var(--danger);">High Clinical Priority</span>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--navy-header);">Glioma (Class ID: 0)</div>
+                    <span class="pill-status" style="background: rgba(239, 68, 68, 0.15); color: var(--danger);">High Clinical Priority • 90% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    Gliomas originate from glial support cells in the brain and spinal cord. They are characteristically infiltrative, 
-                    displaying heterogeneous signal intensity on T1/T2 MRI with marked peripheral ring contrast enhancement and surrounding vasogenic edema.
+                    From IIIT Sonepat Study: Irregularly shaped, with indistinct borders, highly malignant tumors originating from glial cells, 
+                    diffusely located across cerebral parenchyma. Infiltrative patterns exhibit heterogeneous intensity on T1/T2 MRI with surrounding edema.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">
-                    <div><strong>Anatomical Site:</strong> Cerebral Hemispheres</div>
-                    <div><strong>Model Precision:</strong> 94.2%</div>
+                    <div><strong>Dataset Scans:</strong> ~2,200 Scans (28%)</div>
+                    <div><strong>Model Accuracy:</strong> 90.0%</div>
                     <div><strong>Key MRI Sequence:</strong> T1-Gadolinium / FLAIR</div>
-                    <div><strong>Bounding Box Tag:</strong> Red Overlay</div>
+                    <div><strong>Bounding Box Tag:</strong> Red Overlay (Class 0)</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -257,18 +270,18 @@ def render_overview_page(is_api_connected: bool):
         st.markdown("""
             <div class="kpi-card" style="padding: 24px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">Meningioma (Class ID: 1)</div>
-                    <span class="pill-status" style="background: rgba(245, 158, 11, 0.15); color: var(--warning);">Extra-Axial Neoplasm</span>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--navy-header);">Meningioma (Class ID: 1)</div>
+                    <span class="pill-status" style="background: rgba(16, 185, 129, 0.15); color: #059669;">Extra-Axial • 99% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    Arising from the arachnoid cap cells of the meninges, meningiomas are typically extra-axial, well-circumscribed, and benign. 
-                    They exhibit intense, homogeneous enhancement and frequently display a characteristic 'dural tail' sign on post-contrast imaging.
+                    From IIIT Sonepat Study: Typically benign, well-defined, and localized neoplasms arising from arachnoid cap cells of the meninges. 
+                    They exhibit distinct margins, homogeneous contrast enhancement, and a characteristic dural tail sign.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">
-                    <div><strong>Anatomical Site:</strong> Dural Surfaces / Skull Base</div>
-                    <div><strong>Model Precision:</strong> 93.5%</div>
-                    <div><strong>Key MRI Sequence:</strong> Post-Contrast T1w</div>
-                    <div><strong>Bounding Box Tag:</strong> Cyan Overlay</div>
+                    <div><strong>Dataset Scans:</strong> ~1,900 Scans (25%)</div>
+                    <div><strong>Model Accuracy:</strong> 99.0%</div>
+                    <div><strong>Key MRI Sequence:</strong> Contrast-Enhanced T1w</div>
+                    <div><strong>Bounding Box Tag:</strong> Cyan Overlay (Class 1)</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -277,18 +290,18 @@ def render_overview_page(is_api_connected: bool):
         st.markdown("""
             <div class="kpi-card" style="padding: 24px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">Pituitary Adenoma (Class ID: 3)</div>
-                    <span class="pill-status" style="background: rgba(14, 165, 233, 0.15); color: var(--info);">Sellar Region</span>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--navy-header);">Pituitary Adenoma (Class ID: 3)</div>
+                    <span class="pill-status" style="background: rgba(14, 165, 233, 0.15); color: var(--info);">Sellar Region • 94% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    Neoplasms localized within the sella turcica originating from anterior pituitary cells. They can expand superiorly to cause optic chiasm compression, 
-                    visible as discrete focal lesions with delayed contrast wash-in compared to normal pituitary parenchyma.
+                    From IIIT Sonepat Study: Neoplasms localized within the sella turcica originating from anterior pituitary cells. 
+                    May expand superiorly into the suprasellar cistern with optic chiasm compression, showing focal signal asymmetry on coronal scans.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">
-                    <div><strong>Anatomical Site:</strong> Sella Turcica / Skull Base</div>
-                    <div><strong>Model Precision:</strong> 95.1%</div>
-                    <div><strong>Key MRI Sequence:</strong> Dynamic Coronal T1w</div>
-                    <div><strong>Bounding Box Tag:</strong> Purple Overlay</div>
+                    <div><strong>Dataset Scans:</strong> ~1,600 Scans (21%)</div>
+                    <div><strong>Model Accuracy:</strong> 94.0%</div>
+                    <div><strong>Key MRI Sequence:</strong> Coronal T1w High-Res</div>
+                    <div><strong>Bounding Box Tag:</strong> Purple Overlay (Class 3)</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -297,21 +310,26 @@ def render_overview_page(is_api_connected: bool):
         st.markdown("""
             <div class="kpi-card" style="padding: 24px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--text-primary);">No Tumor / Healthy Scan (Class ID: 2)</div>
-                    <span class="pill-status pill-online">Normal Anatomy</span>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--navy-header);">No Tumor / Healthy Scan (Class ID: 2)</div>
+                    <span class="pill-status pill-online">Normal Tissue • 100% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    Healthy cranial MRI displaying symmetric cerebral hemispheres, distinct grey-white matter differentiation, normal ventricular architecture, 
-                    and absence of focal mass effect, abnormal contrast enhancement, or midline shift.
+                    From IIIT Sonepat Study: Healthy cranial MRI displaying symmetric hemispheres, normal sulcal pattern, distinct grey-white matter interface, 
+                    and absence of mass effect or pathological enhancement. Achieved perfect specificity with zero false alarms.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">
-                    <div><strong>Anatomical Site:</strong> Symmetric Parenchyma</div>
-                    <div><strong>Model Specificity:</strong> 97.4%</div>
-                    <div><strong>Key MRI Sequence:</strong> T1, T2, FLAIR</div>
+                    <div><strong>Dataset Scans:</strong> ~1,300–1,500 Scans</div>
+                    <div><strong>Model Accuracy:</strong> 100.0% (Zero False Alarms)</div>
+                    <div><strong>Key MRI Sequence:</strong> Multi-Planar T1/T2/FLAIR</div>
                     <div><strong>Result Status:</strong> Zero Bounding Boxes</div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
+
+    st.markdown("<br/>", unsafe_allow_html=True)
+
+    # --- 5. NURA-INSPIRED CONSULTATION & CONTACT SECTION ---
+    render_contact_form()
 
     render_disclaimer()
     render_footer()

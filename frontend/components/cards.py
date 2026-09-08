@@ -70,11 +70,13 @@ def render_disclaimer():
     """, unsafe_allow_html=True)
 
 def render_footer():
-    """Render professional clinical SaaS footer"""
+    """Render professional clinical healthcare footer inspired by NURA"""
     st.markdown("""
         <div class="footer-container">
-            <div><strong>Nuroscan</strong> — Medical Computer-Vision Platform</div>
-            <div style="margin-top: 4px;">Powered by Ultralytics YOLOv8 • PyTorch • FastAPI • Streamlit</div>
+            <div><strong>Nuroscan</strong> — AI Brain Health Screening &amp; Medical Vision Platform</div>
+            <div style="margin-top: 4px; color: var(--text-muted);">
+                Research by IIIT Sonepat (Rishabh, Marwan et al.) • YOLOv8 &amp; YOLOv11 Architectures
+            </div>
             <div class="footer-links">
                 <a href="https://github.com/marwaaann/NeuroScan.AI" target="_blank">GitHub Repository</a>
                 <span>•</span>

@@ -38,6 +38,7 @@ from frontend.pages.detection import render_detection_page
 from frontend.pages.analytics import render_analytics_page
 from frontend.pages.how_it_works import render_how_it_works_page
 from frontend.pages.about import render_about_page
+from frontend.pages.contact import render_contact_page
 
 def main():
     # Session state initialization - Direct Access by Default
@@ -61,6 +62,8 @@ def main():
         render_how_it_works_page()
     elif selected_page in ["About Nuroscan", "About"]:
         render_about_page()
+    elif selected_page in ["Contact Us", "Contact"]:
+        render_contact_page()
     else:
         render_overview_page(is_api_connected)
 

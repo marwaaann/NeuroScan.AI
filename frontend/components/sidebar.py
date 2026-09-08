@@ -26,7 +26,8 @@ def render_sidebar():
         "🔬 MRI Detection",
         "📈 Model Analytics",
         "💡 How It Works",
-        "ℹ️ About Nuroscan"
+        "ℹ️ About Nuroscan",
+        "📞 Contact Us"
     ]
 
     # Map current_page to full label
@@ -40,7 +41,9 @@ def render_sidebar():
         "Analytics": "📈 Model Analytics",
         "How It Works": "💡 How It Works",
         "About Nuroscan": "ℹ️ About Nuroscan",
-        "About": "ℹ️ About Nuroscan"
+        "About": "ℹ️ About Nuroscan",
+        "Contact Us": "📞 Contact Us",
+        "Contact": "📞 Contact Us"
     }
 
     current_label = label_map.get(st.session_state["current_page"], "📊 Dashboard")
@@ -61,7 +64,8 @@ def render_sidebar():
         "🔬 MRI Detection": "MRI Detection",
         "📈 Model Analytics": "Model Analytics",
         "💡 How It Works": "How It Works",
-        "ℹ️ About Nuroscan": "About Nuroscan"
+        "ℹ️ About Nuroscan": "About Nuroscan",
+        "📞 Contact Us": "Contact Us"
     }
     
     selected_route = clean_map.get(selected_label, "Dashboard")

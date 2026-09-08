@@ -1,31 +1,37 @@
 /* ==========================================================================
-   NeuroScan AI — Design System & Clinical Theme Architecture
+   Nuroscan — NURA-Inspired Clinical Health Screening Design System
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* --- 1. DESIGN TOKENS (LIGHT & DARK THEMES) --- */
+/* --- 1. DESIGN TOKENS (NURA CLINICAL THEME) --- */
 :root {
-    /* Color Palette - Light Mode */
+    /* NURA Healthcare Color Palette - Light Mode */
     --bg-main: #F8FAFC;
     --bg-sidebar: #FFFFFF;
     --surface-card: #FFFFFF;
-    --surface-elevated: #F1F5F9;
+    --surface-elevated: #F1F7F6;
     --surface-subtle: #F8FAFC;
     --border-color: #E2E8F0;
     --border-highlight: #CBD5E1;
+    --border-medical: rgba(0, 168, 150, 0.2);
     
-    --text-primary: #0F172A;
-    --text-secondary: #475569;
-    --text-muted: #94A3B8;
+    --text-primary: #0B2545;
+    --text-secondary: #334E68;
+    --text-muted: #627D98;
     
-    --primary: #0284C7;
-    --primary-hover: #0369A1;
-    --primary-light: #E0F2FE;
-    --primary-glow: rgba(2, 132, 199, 0.15);
+    /* NURA Medical Brand Colors */
+    --primary: #00A896;
+    --primary-hover: #008C7D;
+    --primary-dark: #02675E;
+    --primary-light: #E6F8F5;
+    --primary-glow: rgba(0, 168, 150, 0.22);
     
+    --navy-header: #0B2545;
     --accent-teal: #0D9488;
     --accent-teal-light: #CCFBF1;
+    --accent-cyan: #0284C7;
+    --accent-cyan-light: #E0F2FE;
     
     --success: #10B981;
     --success-bg: #ECFDF5;
@@ -37,15 +43,16 @@
     --info-bg: #F0F9FF;
     
     /* Shadows & Elevation */
-    --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
-    --shadow-hover: 0 12px 24px -4px rgba(2, 132, 199, 0.12);
+    --shadow-sm: 0 1px 2px 0 rgba(11, 37, 69, 0.04);
+    --shadow-md: 0 4px 12px -2px rgba(11, 37, 69, 0.08), 0 2px 6px -1px rgba(11, 37, 69, 0.04);
+    --shadow-lg: 0 12px 24px -4px rgba(11, 37, 69, 0.08), 0 4px 8px -2px rgba(11, 37, 69, 0.04);
+    --shadow-hover: 0 12px 28px -4px rgba(0, 168, 150, 0.2);
 
     /* Radii */
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 14px;
+    --radius-xl: 18px;
     --radius-full: 9999px;
 
     /* Typography */
@@ -444,21 +451,22 @@ div[role="radiogroup"] [data-testid="stWidgetLabel"] {
     color: var(--text-secondary);
 }
 
-/* --- 7. HERO BANNER --- */
+/* --- 7. HERO BANNER (NURA HEALTHCARE AESTHETIC) --- */
 .hero-banner-card {
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.07) 0%, rgba(13, 148, 136, 0.05) 100%);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 36px 32px;
+    background: linear-gradient(135deg, #EBF8F6 0%, #F4FAF9 45%, #EAF5F8 100%);
+    border: 1px solid rgba(0, 168, 150, 0.22);
+    border-radius: var(--radius-xl);
+    padding: 38px 36px;
     margin-bottom: 24px;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 6px 24px -4px rgba(0, 168, 150, 0.08);
 }
 
 .hero-title {
-    font-size: 1.9rem;
+    font-size: 2.1rem;
     font-weight: 800;
-    color: var(--text-primary);
+    color: var(--navy-header);
     letter-spacing: -0.03em;
     margin-bottom: 8px;
     line-height: 1.2;
@@ -467,9 +475,9 @@ div[role="radiogroup"] [data-testid="stWidgetLabel"] {
 .hero-description {
     font-size: 1.05rem;
     color: var(--text-secondary);
-    max-width: 720px;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    max-width: 760px;
+    line-height: 1.65;
+    margin-bottom: 22px;
 }
 
 /* --- 8. SAMPLE SCAN CARDS GRID --- */
@@ -705,3 +713,92 @@ div[role="radiogroup"] [data-testid="stWidgetLabel"] {
         display: none;
     }
 }
+
+/* --- 13. NURA-INSPIRED CONTACT & CONSULTATION FORM STYLING --- */
+.nura-contact-card {
+    background: linear-gradient(135deg, #F0FAF9 0%, #E6F4F1 100%);
+    border: 1px solid rgba(0, 168, 150, 0.25);
+    border-radius: var(--radius-xl);
+    padding: 28px 32px 18px 32px;
+    margin-top: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 30px -4px rgba(0, 168, 150, 0.08);
+}
+
+.nura-contact-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--navy-header);
+    margin-bottom: 6px;
+}
+
+.nura-contact-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    max-width: 720px;
+}
+
+/* Streamlit Input Styling - Clean Medical Aesthetics */
+div[data-testid="stTextInput"] input,
+div[data-testid="stTextArea"] textarea {
+    background-color: #FFFFFF !important;
+    border: 1.5px solid #CBD5E1 !important;
+    border-radius: 8px !important;
+    color: var(--navy-header) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 0.92rem !important;
+    padding: 10px 14px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+div[data-testid="stTextInput"] input:focus,
+div[data-testid="stTextArea"] textarea:focus {
+    border-color: #00A896 !important;
+    box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.18) !important;
+    outline: none !important;
+}
+
+div[data-testid="stSelectbox"] > div > div {
+    background-color: #FFFFFF !important;
+    border: 1.5px solid #CBD5E1 !important;
+    border-radius: 8px !important;
+    color: var(--navy-header) !important;
+    font-family: var(--font-sans) !important;
+}
+
+/* Streamlit Button Enhancements */
+button[kind="primary"], div.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #00A896 0%, #008C7D 100%) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(0, 168, 150, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+button[kind="primary"]:hover, div.stButton > button[kind="primary"]:hover {
+    background: linear-gradient(135deg, #009688 0%, #00796B 100%) !important;
+    box-shadow: 0 6px 20px rgba(0, 168, 150, 0.42) !important;
+    transform: translateY(-1px) !important;
+}
+
+button[kind="secondary"], div.stButton > button[kind="secondary"] {
+    background: #FFFFFF !important;
+    color: #008C7D !important;
+    border: 1.5px solid #00A896 !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    transition: all 0.2s ease !important;
+}
+
+button[kind="secondary"]:hover, div.stButton > button[kind="secondary"]:hover {
+    background: #E6F8F5 !important;
+    border-color: #008C7D !important;
+    color: #00796B !important;
+    transform: translateY(-1px) !important;
+}
+

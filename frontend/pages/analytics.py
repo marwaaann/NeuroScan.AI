@@ -147,14 +147,66 @@ def render_analytics_page():
             st.info("Confusion matrix evaluation available from training artifacts.")
 
     with tab4:
-        st.markdown("### Clinical Evaluation Terminology Guide")
+        st.markdown("### Clinical Evaluation & IIIT Sonepat Research Paper Benchmarks")
         st.markdown("""
-            | Metric | Meaning in Medical AI | Benchmark Result |
+            <div class="kpi-card" style="padding: 20px; margin-bottom: 16px;">
+                <div style="font-size: 1.05rem; font-weight: 700; color: var(--navy-header); margin-bottom: 6px;">
+                    Per-Class Accuracy Breakdown (Research Study: Rishabh, Marwan et al.)
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color); color: var(--navy-header);">
+                                <th style="padding: 8px;">Pathology Class</th>
+                                <th style="padding: 8px;">Dataset Distribution</th>
+                                <th style="padding: 8px;">Class Accuracy</th>
+                                <th style="padding: 8px;">Pathological Characteristics</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 8px; font-weight: 600; color: #10B981;">No Tumor (Healthy)</td>
+                                <td style="padding: 8px;">~1,300–1,500 scans</td>
+                                <td style="padding: 8px; font-weight: 700; color: #10B981;">100.0%</td>
+                                <td style="padding: 8px;">Normal parenchyma, zero false alarms observed</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 8px; font-weight: 600; color: var(--primary);">Meningioma</td>
+                                <td style="padding: 8px;">~1,900 scans</td>
+                                <td style="padding: 8px; font-weight: 700; color: var(--primary);">99.0%</td>
+                                <td style="padding: 8px;">Benign, well-defined, dural attachment</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 8px; font-weight: 600; color: var(--info);">Pituitary Adenoma</td>
+                                <td style="padding: 8px;">~1,600 scans</td>
+                                <td style="padding: 8px; font-weight: 700; color: var(--info);">94.0%</td>
+                                <td style="padding: 8px;">Sellar region, chiasm proximity, focal asymmetry</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 8px; font-weight: 600; color: var(--danger);">Glioma</td>
+                                <td style="padding: 8px;">~2,200 scans</td>
+                                <td style="padding: 8px; font-weight: 700; color: var(--danger);">90.0%</td>
+                                <td style="padding: 8px;">Infiltrative, indistinct borders, highly malignant</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: 700; color: var(--navy-header);">Overall System</td>
+                                <td style="padding: 8px; font-weight: 700;">7,000–8,000 scans</td>
+                                <td style="padding: 8px; font-weight: 800; color: var(--primary);">~95.0%</td>
+                                <td style="padding: 8px; font-weight: 700;">3 Anatomical Planes (Axial, Sagittal, Coronal)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+            | Metric | Meaning in Medical AI | Production Value |
             | :--- | :--- | :--- |
-            | **mAP@50** | **Mean Average Precision** at Intersection-over-Union (IoU) 0.50 threshold. Represents overall tumor localization quality. | **96.31%** |
-            | **Precision** | **True Positive Accuracy** — Out of all tumor regions predicted by the model, how many were true tumor lesions. Minimizes false alarms. | **93.87%** |
-            | **Recall** | **Sensitivity / Detection Rate** — Out of all real tumors present in scans, how many did the model detect. Critical for patient safety. | **94.01%** |
-            | **Loss Curve** | Indicates the stability of the neural network's gradient updates during bounding box regression and classification. | Steady Convergence |
+            | **mAP@50** | **Mean Average Precision** at Intersection-over-Union (IoU) 0.50 threshold. Represents overall tumor localization quality. | **96.31%** (YOLOv8) / **0.95** (YOLOv11) |
+            | **Precision** | **True Positive Accuracy** — Out of all tumor regions predicted by the model, how many were true tumor lesions. Minimizes false alarms. | **96.0%** |
+            | **Recall** | **Sensitivity / Detection Rate** — Out of all real tumors present in scans, how many did the model detect. Critical for patient safety. | **94.0%** |
+            | **Inference Rate** | GPU processing throughput per cranial slice. | **92 FPS (~32 ms)** |
         """)
 
     render_disclaimer()

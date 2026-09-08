@@ -88,6 +88,58 @@ class APIClient:
         except Exception as e:
             return False, {"error": f"An error occurred: {str(e)}"}
 
+    def submit_contact(
+        self,
+        full_name: str,
+        phone: str,
+        location: str,
+        email: Optional[str] = None,
+        message: Optional[str] = None
+    ) -> Tuple[bool, Dict[str, Any]]:
+        """
+        Submit a consultation/contact request to the backend.
+        Stores in SQLite via FastAPI POST /contact or direct backend contact service fallback.
+        """
+        payload = {
+            "full_name": full_name,
+            "phone": phone,
+            "location": location,
+            "email": email or "",
+            "message": message or ""
+        }
+        try:
+            url = f"{self.base_url}/contact"
+            res = requests.post(url, json=payload, timeout=5)
+            if res.status_code == 200:
+                return True, res.json()
+            else:
+                try:
+                    err = res.json().get("detail", f"HTTP {res.status_code}")
+                except Exception:
+                    err = f"HTTP {res.status_code} Error"
+                return False, {"error": err}
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            # Standalone fallback: insert directly into backend SQLite database
+            try:
+                from backend.services.contact_service import create_contact
+                rec = create_contact(
+                    full_name=full_name,
+                    phone=phone,
+                    location=location,
+                    email=email,
+                    message=message
+                )
+                return True, {
+                    "status": "success",
+                    "message": "Consultation request saved directly to database (standalone mode).",
+                    "contact_id": rec["id"]
+                }
+            except Exception as db_err:
+                logger.error(f"Direct DB contact creation error: {db_err}")
+                return False, {"error": f"Failed to store contact request: {str(db_err)}"}
+        except Exception as e:
+            return False, {"error": f"An error occurred: {str(e)}"}
+
 # Global singleton client instance
 _api_client = APIClient()
 
