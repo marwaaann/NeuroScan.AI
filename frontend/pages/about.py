@@ -4,14 +4,14 @@ from frontend.components.icons import get_svg_icon
 
 def render_about_page():
     """
-    Render About NeuroScan.AI page with academic research paper attribution,
-    IIIT Sonepat authorship, clinical dataset methodology, and technical architecture.
+    Render About NeuroScan.AI page with creator attribution,
+    clinical dataset methodology, and technical deep learning architecture.
     """
     render_top_header(
         title="About NeuroScan.AI & Research Background",
         description="Clinical deep learning initiative for real-time brain MRI tumor localization and classification.",
-        meta_text="Based on Research: IIIT Sonepat • YOLOv8 & YOLOv11 Benchmarks • Multi-Planar MRI Analysis",
-        badges=["IIIT Sonepat Research", "Peer-Reviewed Architecture", "Multi-Planar MRI", "Open-Source AI"]
+        meta_text="Developed by Marwan Shafi • YOLOv8 & YOLOv11 Benchmarks • Multi-Planar MRI Analysis",
+        badges=["AI Healthcare Innovation", "Deep Learning Vision", "Multi-Planar MRI", "Open-Source AI"]
     )
 
     col1, col2 = st.columns([1.6, 1.2], gap="large")
@@ -24,7 +24,7 @@ def render_about_page():
                     "Brain Tumor Detection Using YOLOv8 and YOLOv11"
                 </div>
                 <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
-                    Department of Computer Science, <strong>Indian Institute of Information Technology Sonepat (IIIT Sonepat)</strong>, Haryana, India.
+                    Clinical Machine Learning &amp; Computer Vision Research Initiative.
                 </div>
                 <div style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 14px;">
                     <strong>Abstract &amp; Clinical Context:</strong> Brain tumor diagnosis through manual MRI reading is laborious, time-consuming, 
@@ -88,33 +88,23 @@ def render_about_page():
         """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('users', size=22, color='var(--primary)')} Research Authors (IIIT Sonepat)</span>", unsafe_allow_html=True)
+        st.markdown(f"### <span style='display:inline-flex; align-items:center; gap:8px;'>{get_svg_icon('users', size=22, color='var(--primary)')} Project Creator &amp; Architect</span>", unsafe_allow_html=True)
         st.markdown("""
             <div class="kpi-card" style="padding: 24px; margin-bottom: 20px;">
                 <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
-                    <div style="margin-bottom: 10px;">
-                        <strong style="color: var(--navy-header); font-size: 0.98rem;">Rishabh *</strong><br/>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Lead Author &amp; Researcher • Dept. of Computer Science</span>
+                    <div style="margin-bottom: 12px;">
+                        <strong style="color: var(--navy-header); font-size: 1.08rem;">Marwan Shafi</strong><br/>
+                        <span style="font-size: 0.84rem; color: var(--primary); font-weight: 600;">Lead Developer &amp; AI Architect</span>
                     </div>
-                    <div style="margin-bottom: 10px;">
-                        <strong style="color: var(--navy-header); font-size: 0.98rem;">Marwan *</strong><br/>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Lead Author, AI Architecture &amp; System Implementation</span>
+                    <div style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+                        Creator and lead builder of <strong>NeuroScan.AI</strong>. Designed and implemented the complete medical computer vision system, 
+                        custom YOLOv8 inference pipeline, interactive clinical UI/UX design system, in-process latency optimizations, 
+                        and production cloud deployment architecture.
                     </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong>Devendra Kumar</strong><br/>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Researcher • IIIT Sonepat</span>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong>Hamza</strong><br/>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Researcher • IIIT Sonepat</span>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong>Sudhanshu Garg</strong><br/>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Researcher • IIIT Sonepat</span>
-                    </div>
-                    <div>
-                        <strong>Sarvaswa Kumar Tiwari</strong><br/>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Researcher • IIIT Sonepat</span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <span class="tech-badge" style="background: rgba(0, 168, 150, 0.12); color: #007E70;">Lead Creator</span>
+                        <span class="tech-badge" style="background: rgba(2, 132, 199, 0.12); color: #0284C7;">PyTorch &amp; YOLOv8</span>
+                        <span class="tech-badge" style="background: rgba(16, 185, 129, 0.12); color: #059669;">Full-Stack AI Architecture</span>
                     </div>
                 </div>
             </div>

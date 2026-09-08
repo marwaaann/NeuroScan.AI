@@ -11,8 +11,8 @@ def render_contact_page():
     render_top_header(
         title="Clinical Consultation & Inquiry",
         description="Connect with the NeuroScan.AI team for AI screening demonstrations, clinical research collaborations, or hospital pilot programs.",
-        meta_text="Official Inquiry Portal • IIIT Sonepat Research Initiative • Response Time: Within 24h",
-        badges=["AI Screening", "Clinical Collaboration", "IIIT Sonepat Research", "PACS Integration"]
+        meta_text="Official Inquiry Portal • Developed by Marwan Shafi • Response Time: Within 24h",
+        badges=["AI Screening", "Clinical Collaboration", "Diagnostic Vision", "PACS Integration"]
     )
 
     c1, c2, c3 = st.columns(3)

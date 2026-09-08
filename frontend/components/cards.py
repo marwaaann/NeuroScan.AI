@@ -83,7 +83,7 @@ def render_footer():
         <div class="footer-container">
             <div><strong>NeuroScan.AI</strong> — AI Brain Health Screening &amp; Medical Vision Platform</div>
             <div style="margin-top: 4px; color: var(--text-muted);">
-                Research by IIIT Sonepat (Rishabh, Marwan et al.) • YOLOv8 &amp; YOLOv11 Architectures
+                Developed by Marwan Shafi • YOLOv8 &amp; YOLOv11 Deep Learning Architectures
             </div>
             <div class="footer-links">
                 <a href="https://github.com/marwaaann/NeuroScan.AI" target="_blank">GitHub Repository</a>

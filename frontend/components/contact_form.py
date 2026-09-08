@@ -49,7 +49,7 @@ def render_contact_form(compact: bool = False):
                     [
                         "Select Location",
                         "Bengaluru",
-                        "Delhi NCR (Sonepat / Gurugram / Noida)",
+                        "Delhi NCR (New Delhi / Gurugram / Noida)",
                         "Mumbai",
                         "Hyderabad",
                         "Chennai",

@@ -20,8 +20,8 @@ def render_overview_page(is_api_connected: bool):
     render_top_header(
         title="NeuroScan.AI — AI Brain Health Screening Platform",
         description="Automated cranial MRI brain tumor localization and multi-class screening powered by YOLO deep learning architectures.",
-        meta_text="Empirical Research: IIIT Sonepat (Rishabh, Marwan et al.) • 7,500+ Scans • 92 FPS Real-Time Inference",
-        badges=["NURA Clinical Screening", "IIIT Sonepat Research", "95% System Accuracy", "Multi-Planar MRI (Axial, Sagittal, Coronal)"]
+        meta_text="Developed by Marwan Shafi • 7,500+ Scans Training Cohort • 92 FPS Real-Time Inference",
+        badges=["NURA Clinical Screening", "YOLOv8 Architecture", "95% System Accuracy", "Multi-Planar MRI (Axial, Sagittal, Coronal)"]
     )
 
     # --- 1. HERO BANNER (NURA HEALTHCARE AESTHETIC) ---
@@ -60,7 +60,7 @@ def render_overview_page(is_api_connected: bool):
     st.markdown("<br/>", unsafe_allow_html=True)
 
     # --- 2. INTERACTIVE ACCURACY GAUGE & KPIS ---
-    st.markdown("### Empirical Performance Benchmarks (IIIT Sonepat Research)")
+    st.markdown("### Empirical Performance Benchmarks (YOLOv8 Multi-Planar)")
     col_gauge, col_kpis = st.columns([1.1, 2], gap="large")
 
     with col_gauge:
@@ -255,7 +255,7 @@ def render_overview_page(is_api_connected: bool):
                     <span class="pill-status" style="background: rgba(239, 68, 68, 0.15); color: var(--danger);">High Clinical Priority • 90% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    From IIIT Sonepat Study: Irregularly shaped, with indistinct borders, highly malignant tumors originating from glial cells, 
+                    <strong>Pathological Profile:</strong> Irregularly shaped, with indistinct borders, highly malignant tumors originating from glial cells, 
                     diffusely located across cerebral parenchyma. Infiltrative patterns exhibit heterogeneous intensity on T1/T2 MRI with surrounding edema.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">
@@ -275,7 +275,7 @@ def render_overview_page(is_api_connected: bool):
                     <span class="pill-status" style="background: rgba(16, 185, 129, 0.15); color: #059669;">Extra-Axial • 99% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    From IIIT Sonepat Study: Typically benign, well-defined, and localized neoplasms arising from arachnoid cap cells of the meninges. 
+                    <strong>Pathological Profile:</strong> Typically benign, well-defined, and localized neoplasms arising from arachnoid cap cells of the meninges. 
                     They exhibit distinct margins, homogeneous contrast enhancement, and a characteristic dural tail sign.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">
@@ -295,7 +295,7 @@ def render_overview_page(is_api_connected: bool):
                     <span class="pill-status" style="background: rgba(14, 165, 233, 0.15); color: var(--info);">Sellar Region • 94% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    From IIIT Sonepat Study: Neoplasms localized within the sella turcica originating from anterior pituitary cells. 
+                    <strong>Pathological Profile:</strong> Neoplasms localized within the sella turcica originating from anterior pituitary cells. 
                     May expand superiorly into the suprasellar cistern with optic chiasm compression, showing focal signal asymmetry on coronal scans.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">
@@ -315,7 +315,7 @@ def render_overview_page(is_api_connected: bool):
                     <span class="pill-status pill-online">Normal Tissue • 100% Accuracy</span>
                 </div>
                 <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
-                    From IIIT Sonepat Study: Healthy cranial MRI displaying symmetric hemispheres, normal sulcal pattern, distinct grey-white matter interface, 
+                    <strong>Pathological Profile:</strong> Healthy cranial MRI displaying symmetric hemispheres, normal sulcal pattern, distinct grey-white matter interface, 
                     and absence of mass effect or pathological enhancement. Achieved perfect specificity with zero false alarms.
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.84rem;">

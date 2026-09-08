@@ -84,9 +84,6 @@ def render_sidebar():
             <div class="pill-status pill-online">
                 <span></span> {badge_text}
             </div>
-            <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 6px;">
-                Tensor: <strong>640×640 RGB</strong> • Latency: <strong>~32ms</strong>
-            </div>
         ''', unsafe_allow_html=True)
     else:
         st.sidebar.markdown('''

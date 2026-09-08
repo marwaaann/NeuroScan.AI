@@ -147,11 +147,11 @@ def render_analytics_page():
             st.info("Confusion matrix evaluation available from training artifacts.")
 
     with tab4:
-        st.markdown("### Clinical Evaluation & IIIT Sonepat Research Paper Benchmarks")
+        st.markdown("### Clinical Evaluation & YOLOv8 Validation Benchmarks")
         st.markdown("""
             <div class="kpi-card" style="padding: 20px; margin-bottom: 16px;">
                 <div style="font-size: 1.05rem; font-weight: 700; color: var(--navy-header); margin-bottom: 6px;">
-                    Per-Class Accuracy Breakdown (Research Study: Rishabh, Marwan et al.)
+                    Per-Class Accuracy Breakdown (Developed by Marwan Shafi)
                 </div>
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">

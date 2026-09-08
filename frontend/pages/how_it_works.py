@@ -4,13 +4,13 @@ from frontend.components.icons import get_svg_icon
 
 def render_how_it_works_page():
     """
-    Render educational How It Works page explaining the research-grade YOLO pipeline,
-    based on the IIIT Sonepat study ('Brain Tumor Detection Using YOLOv8 and YOLOv11').
+    Render educational How It Works page explaining the research-grade YOLO pipeline
+    for brain tumor localization and multi-class classification.
     """
     render_top_header(
         title="How NeuroScan.AI Works — System Architecture",
         description="Comprehensive technical walkthrough of the deep learning pipeline transforming raw multi-planar MRI scans into localized diagnostic insights.",
-        meta_text="Based on Research: IIIT Sonepat (Rishabh, Marwan et al.) • Multi-Perspective Cranial Imaging",
+        meta_text="Developed by Marwan Shafi • YOLOv8 & YOLOv11 Deep Learning Architectures • Multi-Perspective Cranial Imaging",
         badges=["YOLOv8 & YOLOv11", "Single-Stage Detection", "Bounding Box Regression", "92 FPS Real-Time"]
     )
 
