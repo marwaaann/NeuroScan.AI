@@ -63,7 +63,7 @@ def render_disclaimer():
         <div class="disclaimer-card">
             <div class="disclaimer-header">⚠️ Research &amp; Educational Tool — Not a Medical Diagnosis</div>
             <div class="disclaimer-body">
-                NeuroScan AI provides deep learning bounding-box detection to assist scientific and educational research.
+                Nuroscan provides deep learning bounding-box detection to assist scientific and educational research.
                 Model inferences are probabilistic and must never replace diagnostic evaluation by a licensed physician or board-certified radiologist.
             </div>
         </div>
@@ -73,7 +73,7 @@ def render_footer():
     """Render professional clinical SaaS footer"""
     st.markdown("""
         <div class="footer-container">
-            <div><strong>NeuroScan AI</strong> — Medical Computer-Vision Platform</div>
+            <div><strong>Nuroscan</strong> — Medical Computer-Vision Platform</div>
             <div style="margin-top: 4px;">Powered by Ultralytics YOLOv8 • PyTorch • FastAPI • Streamlit</div>
             <div class="footer-links">
                 <a href="https://github.com/marwaaann/NeuroScan.AI" target="_blank">GitHub Repository</a>

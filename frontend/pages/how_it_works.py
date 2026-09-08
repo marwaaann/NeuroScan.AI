@@ -4,7 +4,7 @@ from frontend.components.cards import render_top_header, render_disclaimer, rend
 def render_how_it_works_page():
     """Render educational How It Works page explaining the YOLOv8 medical vision pipeline"""
     render_top_header(
-        title="How NeuroScan AI Works",
+        title="How Nuroscan Works",
         description="An overview of the deep learning computer-vision pipeline transforming raw MRI scans into diagnostic insights.",
         meta_text="Algorithm: YOLOv8 Single-Stage Detector • Spatial Resolution: 640×640",
         badges=["Deep Learning", "Convolutional Neural Network", "Feature Pyramid", "NMS Localization"]
@@ -58,7 +58,7 @@ def render_how_it_works_page():
     st.markdown("""
         <div class="kpi-card" style="padding: 24px;">
             <div style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
-                NeuroScan AI is strictly designed to function as an <strong>assistive second-reader tool</strong>. In a clinical workflow, 
+                Nuroscan is strictly designed to function as an <strong>assistive second-reader tool</strong>. In a clinical workflow, 
                 AI bounding boxes serve as an instant visual triage aid to draw the clinician's attention to suspicious tissue regions, 
                 reducing diagnostic fatigue while keeping the final decision authority in the hands of the medical specialist.
             </div>

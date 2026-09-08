@@ -144,7 +144,7 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
             st.download_button(
                 label="📥 Download Annotated Image (PNG)",
                 data=ann_bytes,
-                file_name=f"neuroscan_annotated_{filename}.png",
+                file_name=f"nuroscan_annotated_{filename}.png",
                 mime="image/png",
                 use_container_width=True,
                 type="primary"
@@ -152,7 +152,7 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
 
     with exp_c2:
         report_data = {
-            "application": "NeuroScan AI",
+            "application": "Nuroscan",
             "version": "YOLOv8n-Medical",
             "filename": filename,
             "detections_count": count,
@@ -162,7 +162,7 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
         st.download_button(
             label="📄 Download Clinical Summary (JSON)",
             data=json.dumps(report_data, indent=2),
-            file_name=f"neuroscan_report_{filename}.json",
+            file_name=f"nuroscan_report_{filename}.json",
             mime="application/json",
             use_container_width=True,
             type="secondary"

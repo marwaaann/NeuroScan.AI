@@ -15,7 +15,7 @@ FAVICON_PATH = os.path.join(os.path.dirname(__file__), "favicon.png")
 page_icon_val = FAVICON_PATH if os.path.exists(FAVICON_PATH) else "🧠"
 
 st.set_page_config(
-    page_title="NeuroScan AI | Clinical Brain MRI Vision",
+    page_title="Nuroscan | Clinical Brain MRI Platform",
     page_icon=page_icon_val,
     layout="wide",
     initial_sidebar_state="expanded"
@@ -30,36 +30,22 @@ if os.path.exists(CSS_PATH):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# Modular Page Imports
+# Modular Page Imports (Clean & Essential)
 # ---------------------------------------------------------
 from frontend.components.sidebar import render_sidebar
 from frontend.pages.overview import render_overview_page
 from frontend.pages.detection import render_detection_page
-from frontend.pages.history import render_history_page
 from frontend.pages.analytics import render_analytics_page
-from frontend.pages.model_info import render_model_info_page
 from frontend.pages.how_it_works import render_how_it_works_page
 from frontend.pages.about import render_about_page
-from frontend.pages.login import render_login_page
 
 def main():
-    # Session state initialization - Direct Access by Default (Zero Friction for Evaluators)
-    if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = True
-
-    if "user_email" not in st.session_state:
-        st.session_state["user_email"] = "researcher@neuroscan.ai"
-
+    # Session state initialization - Direct Access by Default
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = "Dashboard"
 
     if "scan_history" not in st.session_state:
         st.session_state["scan_history"] = []
-
-    # Optional explicit logout / locked state
-    if not st.session_state.get("authenticated", True):
-        render_login_page()
-        return
 
     # Render main clinical shell & sidebar
     selected_page, is_api_connected = render_sidebar()
@@ -67,20 +53,14 @@ def main():
     # Route to appropriate clinical view
     if selected_page in ["Dashboard", "Overview"]:
         render_overview_page(is_api_connected)
-    elif selected_page in ["MRI Analysis", "Detection"]:
+    elif selected_page in ["MRI Detection", "MRI Analysis", "Detection"]:
         render_detection_page(is_api_connected)
-    elif selected_page in ["Scan History"]:
-        render_history_page()
     elif selected_page in ["Model Analytics", "Analytics"]:
         render_analytics_page()
-    elif selected_page in ["Technical Specs", "Model Information"]:
-        render_model_info_page()
     elif selected_page in ["How It Works"]:
         render_how_it_works_page()
-    elif selected_page in ["About NeuroScan", "About"]:
+    elif selected_page in ["About Nuroscan", "About"]:
         render_about_page()
-    elif selected_page in ["Login", "Session"]:
-        render_login_page()
     else:
         render_overview_page(is_api_connected)
 

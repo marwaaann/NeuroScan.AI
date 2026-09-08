@@ -1,7 +1,7 @@
-# NeuroScan AI: Intelligent Brain Tumor Detection System
+# Nuroscan: Intelligent Brain Tumor Detection System
 
 <p align="center">
-  <img src="frontend/favicon.png" alt="NeuroScan AI Logo" width="80" height="80" />
+  <img src="frontend/favicon.png" alt="Nuroscan Logo" width="80" height="80" />
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@ You can test and interact with the live application directly in your browser:
 
 ## 📖 Overview
 
-**NeuroScan AI** is an end-to-end medical computer-vision application engineered to assist clinicians, researchers, and radiologists in detecting and localizing brain tumors from Magnetic Resonance Imaging (MRI) scans. Powered by a custom-trained **Ultralytics YOLOv8** model, it delivers real-time bounding-box detection, confidence scoring, and diagnostic analytics across four distinct tissue classes.
+**Nuroscan** is an end-to-end medical computer-vision application engineered to assist clinicians, researchers, and radiologists in detecting and localizing brain tumors from Magnetic Resonance Imaging (MRI) scans. Powered by a custom-trained **Ultralytics YOLOv8** model, it delivers real-time bounding-box detection, confidence scoring, and diagnostic analytics across four distinct tissue classes.
 
 ---
 

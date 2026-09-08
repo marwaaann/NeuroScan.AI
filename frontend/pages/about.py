@@ -4,9 +4,9 @@ from frontend.components.cards import render_top_header, render_disclaimer, rend
 def render_about_page():
     """Render About NeuroScan page with technology stack, project mission, and author attribution"""
     render_top_header(
-        title="About NeuroScan AI",
+        title="About Nuroscan",
         description="An open-source medical imaging AI initiative applying computer vision to brain tumor detection.",
-        meta_text="Version: 2.1 • Author: Marwan Shafi • License: Research & Education",
+        meta_text="Version: 2.2 • Author: Marwan Shafi • License: Research & Education",
         badges=["Open Source", "Medical Vision", "Deep Learning", "Portfolio Project"]
     )
 
@@ -17,12 +17,12 @@ def render_about_page():
         st.markdown("""
             <div class="kpi-card" style="padding: 24px; margin-bottom: 20px;">
                 <div style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
-                    <strong>NeuroScan AI</strong> was conceived to demonstrate how state-of-the-art computer vision 
+                    <strong>Nuroscan</strong> was conceived to demonstrate how state-of-the-art computer vision 
                     techniques can be translated into practical, transparent, and responsive clinical tools. 
                     <br/><br/>
                     Brain tumors are among the most aggressive oncological conditions, where timely diagnosis and precise 
                     anatomical localization can fundamentally change patient prognosis. By pairing <strong>YOLOv8</strong> object 
-                    detection with an intuitive web workspace, NeuroScan AI provides sub-second localization across Glioma, 
+                    detection with an intuitive web workspace, Nuroscan provides sub-second localization across Glioma, 
                     Meningioma, and Pituitary adenomas.
                 </div>
             </div>
