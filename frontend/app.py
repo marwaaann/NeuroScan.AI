@@ -116,9 +116,23 @@ def render_top_theme_toggle():
             st.rerun()
 
 def main():
-    # Session state initialization - Direct Access by Default
+    # Session state initialization - restore active workspace from URL query parameters
+    PAGE_SLUGS = {
+        "dashboard": "Dashboard",
+        "detection": "MRI Detection",
+        "analytics": "Model Analytics",
+        "how-it-works": "How It Works",
+        "about": "About NeuroScan.AI",
+        "contact": "Contact Us"
+    }
+    url_slug = "dashboard"
+    try:
+        url_slug = st.query_params.get("page", "dashboard")
+    except Exception:
+        pass
+
     if "current_page" not in st.session_state:
-        st.session_state["current_page"] = "Dashboard"
+        st.session_state["current_page"] = PAGE_SLUGS.get(url_slug, "Dashboard")
 
     if "scan_history" not in st.session_state:
         st.session_state["scan_history"] = []

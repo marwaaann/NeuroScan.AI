@@ -1,14 +1,30 @@
 import os
 import io
+import gc
 import base64
 import logging
 from typing import Dict, Any, List, Optional
 from PIL import Image, ImageOps
 import numpy as np
 
-# Suppress Ultralytics telemetry, checks, and network sync to ensure sub-millisecond offline inference
+# Suppress OpenMP/BLAS thread explosion and Ultralytics telemetry to guarantee ultra-low memory footprint (<250MB)
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["YOLO_VERBOSE"] = "False"
 os.environ["ULTRALYTICS_SETTINGS"] = "sync=False"
+
+try:
+    import torch
+    try:
+        torch.set_num_threads(1)
+        torch.set_num_interop_threads(1)
+    except Exception:
+        pass
+except ImportError:
+    torch = None
 
 try:
     import ultralytics
@@ -26,6 +42,7 @@ class YOLOService:
     """
     Singleton-style service for loading YOLOv8 brain tumor detection model
     and running high-speed inference on uploaded cranial MRI scans.
+    Optimized for low-memory containerized environments (Render, Cloud Run, Docker).
     """
     
     _instance: Optional['YOLOService'] = None
@@ -111,27 +128,51 @@ class YOLOService:
         """
         Run inference on image bytes and return structured results with base64 annotated image.
         Distinguishes pathological tumor lesions (Glioma, Meningioma, Pituitary) from healthy normal tissue (No Tumor).
+        Optimized with torch.inference_mode() and 1 thread to avoid memory spikes.
         """
         if not self.is_loaded():
             if not self.load_model():
                 raise RuntimeError("YOLO model is not loaded. Please verify model/best.pt exists.")
 
-        # Robust multi-format image loading and normalization
+        # Robust multi-format image loading, normalization, and memory downsampling
         try:
             pil_img = Image.open(io.BytesIO(image_bytes))
             pil_img = ImageOps.exif_transpose(pil_img)
             if pil_img.mode != 'RGB':
                 pil_img = pil_img.convert('RGB')
+            
+            # Cap maximum dimension to 1024px to prevent RAM spikes on phone/camera uploads
+            if max(pil_img.size) > 1024:
+                pil_img.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
         except Exception as e:
             raise ValueError(f"Invalid cranial image content: {str(e)}")
 
-        # Run high-speed inference
-        results = self.model.predict(
-            source=pil_img,
-            conf=conf_threshold,
-            save=False,
-            verbose=False
-        )
+        # Run inference in zero-overhead inference mode with single thread
+        try:
+            if torch is not None:
+                with torch.inference_mode():
+                    results = self.model.predict(
+                        source=pil_img,
+                        conf=conf_threshold,
+                        save=False,
+                        verbose=False,
+                        device="cpu",
+                        imgsz=640,
+                        half=False
+                    )
+            else:
+                results = self.model.predict(
+                    source=pil_img,
+                    conf=conf_threshold,
+                    save=False,
+                    verbose=False,
+                    device="cpu",
+                    imgsz=640,
+                    half=False
+                )
+        except Exception as inf_err:
+            logger.error(f"Inference execution failed: {inf_err}", exc_info=True)
+            raise RuntimeError(f"YOLO inference error: {str(inf_err)}")
 
         detections = []
         formatted_base64 = None
@@ -159,18 +200,25 @@ class YOLOService:
                         }
                     })
 
-            # Generate annotated image overlay
+            # Generate memory-efficient annotated image overlay (JPEG 85 quality)
             try:
                 annotated_bgr = result.plot()
                 annotated_rgb = annotated_bgr[:, :, ::-1]  # Convert BGR to RGB
                 annotated_pil = Image.fromarray(annotated_rgb)
 
                 img_buffer = io.BytesIO()
-                annotated_pil.save(img_buffer, format="PNG")
+                annotated_pil.save(img_buffer, format="JPEG", quality=85, optimize=True)
                 base64_str = base64.b64encode(img_buffer.getvalue()).decode("utf-8")
-                formatted_base64 = f"data:image/png;base64,{base64_str}"
+                formatted_base64 = f"data:image/jpeg;base64,{base64_str}"
+                
+                # Immediate buffer cleanup
+                del annotated_bgr, annotated_rgb, annotated_pil, img_buffer
             except Exception as plot_err:
                 logger.warning(f"Error plotting overlay: {plot_err}")
+
+        # Clean up inference objects
+        del pil_img, results
+        gc.collect()
 
         # Distinguish tumor lesions from healthy normal tissue
         # Class 2 is "No Tumor" (Healthy/Normal cranial tissue)

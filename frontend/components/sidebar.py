@@ -52,6 +52,15 @@ def render_sidebar():
         current_page = mapping.get(current_page, "Dashboard")
         st.session_state["current_page"] = current_page
 
+    PAGE_SLUGS = {
+        "Dashboard": "dashboard",
+        "MRI Detection": "detection",
+        "Model Analytics": "analytics",
+        "How It Works": "how-it-works",
+        "About NeuroScan.AI": "about",
+        "Contact Us": "contact"
+    }
+
     st.sidebar.markdown("<div class='sidebar-section-title'>Workspaces</div>", unsafe_allow_html=True)
     
     for page_name, icon_spec in nav_items:
@@ -66,9 +75,17 @@ def render_sidebar():
         ):
             if st.session_state.get("current_page") != page_name:
                 st.session_state["current_page"] = page_name
+                try:
+                    st.query_params["page"] = PAGE_SLUGS.get(page_name, "dashboard")
+                except Exception:
+                    pass
                 st.rerun()
 
     selected_route = st.session_state.get("current_page", "Dashboard")
+    try:
+        st.query_params["page"] = PAGE_SLUGS.get(selected_route, "dashboard")
+    except Exception:
+        pass
 
     st.sidebar.markdown("---")
     st.sidebar.markdown("<div class='sidebar-section-title'>Engine Status</div>", unsafe_allow_html=True)
@@ -79,7 +96,7 @@ def render_sidebar():
     mode = health_data.get("mode", "standalone") if isinstance(health_data, dict) else "standalone"
 
     if is_connected:
-        badge_text = "YOLOv8 Active" if mode == "standalone" else "API Connected"
+        badge_text = "YOLOv8 Active" if mode in ["standalone", "in-process"] else "API Connected"
         st.sidebar.markdown(f'''
             <div class="pill-status pill-online">
                 <span></span> {badge_text}

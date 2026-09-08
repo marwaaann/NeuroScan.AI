@@ -48,11 +48,13 @@ def render_detection_page(is_api_connected: bool):
     with col_left:
         st.markdown("### 1. Upload MRI Scan")
         
+        uploader_version = st.session_state.get("uploader_version", 0)
         uploaded_file = st.file_uploader(
             "Drop MRI scan here (or click to browse)",
             type=["png", "jpg", "jpeg"],
             help="Supported formats: PNG, JPG, JPEG (Max 15MB)",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
+            key=f"mri_uploader_{uploader_version}"
         )
 
         st.markdown("<div style='height: 8px'></div>", unsafe_allow_html=True)
@@ -60,8 +62,9 @@ def render_detection_page(is_api_connected: bool):
         # Check if user uploaded a file
         if uploaded_file is not None:
             up_bytes = uploaded_file.getvalue()
-            if (st.session_state.get("active_filename") != uploaded_file.name or 
-                st.session_state.get("active_bytes") != up_bytes):
+            up_sig = f"{uploaded_file.name}_{uploaded_file.size}"
+            if st.session_state.get("active_file_sig") != up_sig:
+                st.session_state["active_file_sig"] = up_sig
                 st.session_state["active_bytes"] = up_bytes
                 st.session_state["active_filename"] = uploaded_file.name
                 st.session_state.pop("last_pred", None)
@@ -73,6 +76,7 @@ def render_detection_page(is_api_connected: bool):
             with open(selected_sample_path, "rb") as f:
                 st.session_state["active_bytes"] = f.read()
                 st.session_state["active_filename"] = os.path.basename(selected_sample_path)
+            st.session_state["active_file_sig"] = f"sample_{st.session_state['active_filename']}"
             st.session_state.pop("last_pred", None)
             st.session_state.pop("last_pred_scan_id", None)
             st.rerun()
@@ -109,8 +113,10 @@ def render_detection_page(is_api_connected: bool):
 
         if can_analyze:
             if st.button("Clear Current Scan", use_container_width=True, type="secondary"):
+                st.session_state["uploader_version"] = uploader_version + 1
                 st.session_state.pop("active_bytes", None)
                 st.session_state.pop("active_filename", None)
+                st.session_state.pop("active_file_sig", None)
                 st.session_state.pop("last_bytes", None)
                 st.session_state.pop("last_filename", None)
                 st.session_state.pop("last_pred", None)

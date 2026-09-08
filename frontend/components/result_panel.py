@@ -194,10 +194,10 @@ def render_result_panel(pred: Dict[str, Any], orig_bytes: bytes, filename: str):
     with exp_c1:
         if ann_bytes:
             st.download_button(
-                label="Download Annotated Image (PNG)",
+                label="Download Annotated Image",
                 data=ann_bytes,
-                file_name=f"neuroscan_annotated_{filename}.png",
-                mime="image/png",
+                file_name=f"neuroscan_annotated_{filename}.jpg",
+                mime="image/jpeg",
                 use_container_width=True,
                 type="primary"
             )
