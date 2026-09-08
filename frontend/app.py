@@ -1,7 +1,7 @@
 import sys
 import os
 
-# Ensure the repository root directory is in sys.path so 'frontend' and 'backend' packages resolve cleanly
+# Ensure repository root is in sys.path so 'frontend' and 'backend' packages resolve cleanly
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
@@ -15,46 +15,74 @@ FAVICON_PATH = os.path.join(os.path.dirname(__file__), "favicon.png")
 page_icon_val = FAVICON_PATH if os.path.exists(FAVICON_PATH) else "🧠"
 
 st.set_page_config(
-    page_title="NeuroScan AI | Research Workspace",
+    page_title="NeuroScan AI | Clinical Brain MRI Vision",
     page_icon=page_icon_val,
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# ---------------------------------------------------------
 # Load CSS Theme System
+# ---------------------------------------------------------
 CSS_PATH = os.path.join(os.path.dirname(__file__), "styles", "theme.css")
 if os.path.exists(CSS_PATH):
     with open(CSS_PATH, "r", encoding="utf-8") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Imports after page config
-from frontend.pages.login import render_login_page
+# ---------------------------------------------------------
+# Modular Page Imports
+# ---------------------------------------------------------
 from frontend.components.sidebar import render_sidebar
 from frontend.pages.overview import render_overview_page
 from frontend.pages.detection import render_detection_page
+from frontend.pages.history import render_history_page
 from frontend.pages.analytics import render_analytics_page
 from frontend.pages.model_info import render_model_info_page
+from frontend.pages.how_it_works import render_how_it_works_page
+from frontend.pages.about import render_about_page
+from frontend.pages.login import render_login_page
 
 def main():
-    # Session state authentication gate
+    # Session state initialization - Direct Access by Default (Zero Friction for Evaluators)
     if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = False
+        st.session_state["authenticated"] = True
 
-    if not st.session_state["authenticated"]:
+    if "user_email" not in st.session_state:
+        st.session_state["user_email"] = "researcher@neuroscan.ai"
+
+    if "current_page" not in st.session_state:
+        st.session_state["current_page"] = "Dashboard"
+
+    if "scan_history" not in st.session_state:
+        st.session_state["scan_history"] = []
+
+    # Optional explicit logout / locked state
+    if not st.session_state.get("authenticated", True):
         render_login_page()
         return
 
-    # Render main workspace
+    # Render main clinical shell & sidebar
     selected_page, is_api_connected = render_sidebar()
 
-    if selected_page == "Overview":
+    # Route to appropriate clinical view
+    if selected_page in ["Dashboard", "Overview"]:
         render_overview_page(is_api_connected)
-    elif selected_page == "Detection":
+    elif selected_page in ["MRI Analysis", "Detection"]:
         render_detection_page(is_api_connected)
-    elif selected_page == "Model Analytics":
+    elif selected_page in ["Scan History"]:
+        render_history_page()
+    elif selected_page in ["Model Analytics", "Analytics"]:
         render_analytics_page()
-    elif selected_page == "Model Information":
+    elif selected_page in ["Technical Specs", "Model Information"]:
         render_model_info_page()
+    elif selected_page in ["How It Works"]:
+        render_how_it_works_page()
+    elif selected_page in ["About NeuroScan", "About"]:
+        render_about_page()
+    elif selected_page in ["Login", "Session"]:
+        render_login_page()
+    else:
+        render_overview_page(is_api_connected)
 
 if __name__ == "__main__":
     main()

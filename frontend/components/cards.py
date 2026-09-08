@@ -1,39 +1,86 @@
 import streamlit as st
+from typing import List, Optional
 
-def render_top_header(title: str, description: str, meta_text: str = ""):
-    """Render consistent page header across all sections"""
-    st.markdown(f"""
-        <div class="header-title">{title}</div>
-        <div class="header-description">{description}</div>
-        {f'<div class="header-meta">{meta_text}</div>' if meta_text else ''}
-        <br/>
-    """, unsafe_allow_html=True)
+def render_top_header(title: str, description: str, meta_text: str = "", badges: Optional[List[str]] = None):
+    """Render consistent clinical page header with typography and technology badges"""
+    badge_html = ""
+    if badges:
+        badge_html = "<div class='header-badges-row'>" + "".join([f"<span class='tech-badge'>{b}</span>" for b in badges]) + "</div>"
 
-def render_stat_card(label: str, value: str, subtext: str = ""):
-    """Render crisp statistic card"""
+    meta_html = f"<div class='header-meta' style='font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;'>{meta_text}</div>" if meta_text else ""
+
     st.markdown(f"""
-        <div class="metric-box">
-            <div class="metric-label-text">{label}</div>
-            <div class="metric-value-text">{value}</div>
-            {f'<div class="metric-sub-text">{subtext}</div>' if subtext else ''}
+        <div class="page-top-header">
+            <div class="page-title">{title}</div>
+            <div class="page-subtitle">{description}</div>
+            {meta_html}
+            {badge_html}
         </div>
     """, unsafe_allow_html=True)
 
+def render_kpi_card(label: str, value: str, subtext: str = "", icon: str = "📊"):
+    """Render modern clinical KPI statistic card with icon and elevation"""
+    st.markdown(f"""
+        <div class="kpi-card">
+            <div>
+                <div class="kpi-header">
+                    <span class="kpi-label">{label}</span>
+                    <div class="kpi-icon-pill">{icon}</div>
+                </div>
+                <div class="kpi-value">{value}</div>
+            </div>
+            <div class="kpi-subtext">{subtext}</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+def render_workflow_steps(current_step: int = 1):
+    """Render 4-step medical analysis visual progress bar"""
+    steps = [
+        (1, "Upload MRI"),
+        (2, "AI Analysis"),
+        (3, "Diagnostic Review"),
+        (4, "Export Report")
+    ]
+    
+    html = '<div class="workflow-stepper">'
+    for idx, (step_num, step_name) in enumerate(steps):
+        active_cls = "active" if step_num <= current_step else ""
+        html += f'''
+            <div class="step-item {active_cls}">
+                <div class="step-number">{step_num}</div>
+                <span>{step_name}</span>
+            </div>
+        '''
+        if idx < len(steps) - 1:
+            html += '<div class="step-divider"></div>'
+    html += '</div>'
+    
+    st.markdown(html, unsafe_allow_html=True)
+
 def render_disclaimer():
-    """Render restrained, professional medical research disclaimer"""
+    """Render restrained, authoritative medical research disclaimer"""
     st.markdown("""
-        <div class="disclaimer-box">
-            <strong>Research & Educational Use Only</strong><br/>
-            NeuroScan AI is a computer-vision research prototype. Model predictions are probabilistic 
-            and are not a medical diagnosis or substitute for evaluation by a qualified healthcare professional.
+        <div class="disclaimer-card">
+            <div class="disclaimer-header">⚠️ Research &amp; Educational Tool — Not a Medical Diagnosis</div>
+            <div class="disclaimer-body">
+                NeuroScan AI provides deep learning bounding-box detection to assist scientific and educational research.
+                Model inferences are probabilistic and must never replace diagnostic evaluation by a licensed physician or board-certified radiologist.
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
 def render_footer():
-    """Render minimal footer"""
+    """Render professional clinical SaaS footer"""
     st.markdown("""
-        <div class="footer-text">
-            <strong>NeuroScan AI</strong> — AI-assisted Brain MRI Analysis<br/>
-            Research & Educational Prototype • YOLOv8 • FastAPI • Streamlit
+        <div class="footer-container">
+            <div><strong>NeuroScan AI</strong> — Medical Computer-Vision Platform</div>
+            <div style="margin-top: 4px;">Powered by Ultralytics YOLOv8 • PyTorch • FastAPI • Streamlit</div>
+            <div class="footer-links">
+                <a href="https://github.com/marwaaann/NeuroScan.AI" target="_blank">GitHub Repository</a>
+                <span>•</span>
+                <a href="https://neuroscan-ai-lp16.onrender.com" target="_blank">Render Live Deployment</a>
+                <span>•</span>
+                <a href="https://neuroscanai-ahwmpetaryjhq9pm3qv4et.streamlit.app" target="_blank">Streamlit Cloud App</a>
+            </div>
         </div>
     """, unsafe_allow_html=True)

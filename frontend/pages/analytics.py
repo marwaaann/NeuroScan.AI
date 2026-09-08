@@ -2,87 +2,160 @@ import streamlit as st
 import os
 import pandas as pd
 import plotly.graph_objects as go
+from PIL import Image
 
-from frontend.components.cards import render_top_header, render_stat_card, render_disclaimer, render_footer
+from frontend.components.cards import render_top_header, render_kpi_card, render_disclaimer, render_footer
+
+def resolve_asset_path(filename: str) -> str:
+    """Find metric asset across tracked frontend/assets or training run"""
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    candidates = [
+        os.path.join(base_dir, "assets", "metrics", filename),
+        os.path.join(os.getcwd(), "frontend", "assets", "metrics", filename),
+        os.path.join(os.getcwd(), "brain_tumor_detector", "yolov8n_run_1", filename)
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return ""
 
 def render_analytics_page():
+    """Render comprehensive empirical model performance analytics and training history"""
     render_top_header(
-        title="Model Analytics",
-        description="Evaluation metrics and training performance."
+        title="Model Performance & Training Analytics",
+        description="Empirical validation curves, loss telemetry, and classification metrics across 20 training epochs.",
+        meta_text="Model: YOLOv8n • Dataset: Brain Tumor MRI • Target Classes: 4",
+        badges=["Empirical Metrics", "Plotly Visualizations", "Loss Telemetry"]
     )
 
-    # Top metrics overview
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        render_stat_card("mAP@50", "96.31%", "Validation Mean Average Precision")
-    with c2:
-        render_stat_card("mAP@50-95", "79.46%", "mAP across IoU thresholds")
-    with c3:
-        render_stat_card("Precision", "93.87%", "Bounding Box Precision")
-    with c4:
-        render_stat_card("Recall", "94.01%", "Bounding Box Recall")
+    # Top KPI Metrics Overview
+    k1, k2, k3, k4 = st.columns(4)
+    with k1:
+        render_kpi_card("VALIDATION mAP@50", "96.31%", "Mean Average Precision at IoU 0.50", "🎯")
+    with k2:
+        render_kpi_card("mAP@50-95", "79.46%", "mAP across IoU 0.50:0.95 range", "📐")
+    with k3:
+        render_kpi_card("PRECISION", "93.87%", "Bounding Box Precision", "🔬")
+    with k4:
+        render_kpi_card("RECALL", "94.01%", "Lesion Detection Sensitivity", "⚡")
 
     st.markdown("<br/>", unsafe_allow_html=True)
 
-    csv_path = os.path.join(os.getcwd(), "brain_tumor_detector", "yolov8n_run_1", "results.csv")
-    cm_path = os.path.join(os.getcwd(), "brain_tumor_detector", "yolov8n_run_1", "confusion_matrix.png")
+    csv_path = resolve_asset_path("results.csv")
+    cm_path = resolve_asset_path("confusion_matrix_normalized.png")
+    if not cm_path:
+        cm_path = resolve_asset_path("confusion_matrix.png")
 
-    tab1, tab2, tab3 = st.tabs(["Performance", "Training", "Confusion Matrix"])
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "📈 Validation Curves",
+        "📉 Loss Telemetry",
+        "🎯 Confusion Matrix",
+        "📖 Metrics Guide"
+    ])
 
     with tab1:
-        if os.path.exists(csv_path):
+        if csv_path and os.path.exists(csv_path):
             df_results = pd.read_csv(csv_path)
             df_results.columns = [c.strip() for c in df_results.columns]
 
             fig = go.Figure()
-            fig.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['metrics/mAP50(B)'], name='mAP@50', line=dict(color='#2563EB', width=2.5)))
-            fig.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['metrics/mAP50-95(B)'], name='mAP@50-95', line=dict(color='#4F46E5', width=2)))
-            fig.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['metrics/precision(B)'], name='Precision', line=dict(color='#16A34A', width=2)))
-            fig.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['metrics/recall(B)'], name='Recall', line=dict(color='#D97706', width=2)))
+            fig.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['metrics/mAP50(B)'],
+                name='mAP@50', mode='lines+markers',
+                line=dict(color='#0284C7', width=3),
+                marker=dict(size=6)
+            ))
+            fig.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['metrics/mAP50-95(B)'],
+                name='mAP@50-95', mode='lines',
+                line=dict(color='#6366F1', width=2.2)
+            ))
+            fig.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['metrics/precision(B)'],
+                name='Precision', mode='lines',
+                line=dict(color='#10B981', width=2, dash='dash')
+            ))
+            fig.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['metrics/recall(B)'],
+                name='Recall', mode='lines',
+                line=dict(color='#F59E0B', width=2, dash='dot')
+            ))
             
             fig.update_layout(
                 template="plotly_white",
-                title="Validation Metrics per Epoch (20 Epochs)",
+                title="<b>Validation Metrics Progression (20 Epochs)</b>",
                 xaxis_title="Epoch",
-                yaxis_title="Score",
-                height=380,
-                margin=dict(l=20, r=20, t=40, b=20)
+                yaxis_title="Score (0.0 to 1.0)",
+                height=420,
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                margin=dict(l=20, r=20, t=50, b=20)
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
-            st.info("Validation performance metrics available from model training run.")
+            st.info("Validation performance metrics available from model training telemetry.")
 
     with tab2:
-        if os.path.exists(csv_path):
+        if csv_path and os.path.exists(csv_path):
             df_results = pd.read_csv(csv_path)
             df_results.columns = [c.strip() for c in df_results.columns]
 
             fig_loss = go.Figure()
-            fig_loss.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['train/box_loss'], name='Train Box Loss', line=dict(color='#DC2626')))
-            fig_loss.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['val/box_loss'], name='Val Box Loss', line=dict(color='#EF4444', dash='dash')))
-            fig_loss.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['train/cls_loss'], name='Train Class Loss', line=dict(color='#2563EB')))
-            fig_loss.add_trace(go.Scatter(x=df_results['epoch'], y=df_results['val/cls_loss'], name='Val Class Loss', line=dict(color='#60A5FA', dash='dash')))
+            fig_loss.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['train/box_loss'],
+                name='Train Box Loss', line=dict(color='#EF4444', width=2.5)
+            ))
+            fig_loss.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['val/box_loss'],
+                name='Val Box Loss', line=dict(color='#F87171', width=2, dash='dash')
+            ))
+            fig_loss.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['train/cls_loss'],
+                name='Train Class Loss', line=dict(color='#0284C7', width=2.5)
+            ))
+            fig_loss.add_trace(go.Scatter(
+                x=df_results['epoch'], y=df_results['val/cls_loss'],
+                name='Val Class Loss', line=dict(color='#38BDF8', width=2, dash='dash')
+            ))
             
             fig_loss.update_layout(
                 template="plotly_white",
-                title="Bounding Box & Classification Loss History",
+                title="<b>Convergence &amp; Loss Progression</b>",
                 xaxis_title="Epoch",
-                yaxis_title="Loss",
-                height=380,
-                margin=dict(l=20, r=20, t=40, b=20)
+                yaxis_title="Loss Value",
+                height=420,
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                margin=dict(l=20, r=20, t=50, b=20)
             )
             st.plotly_chart(fig_loss, use_container_width=True)
 
     with tab3:
-        if os.path.exists(cm_path):
-            st.image(cm_path, caption="YOLOv8 Confusion Matrix", use_container_width=True)
+        if cm_path and os.path.exists(cm_path):
+            st.markdown("#### Normalized Confusion Matrix (YOLOv8 Validation)")
+            try:
+                cm_img = Image.open(cm_path)
+                st.image(cm_img, caption="Normalized Confusion Matrix across Glioma, Meningioma, No Tumor, and Pituitary classes", use_container_width=True)
+            except Exception:
+                st.error("Failed to load confusion matrix image.")
+            
             st.markdown("""
-                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">
-                    The confusion matrix shows the distribution of correct and incorrect predictions across the four target classes.
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.5;">
+                    The normalized confusion matrix illustrates the proportion of correct vs. misclassified regions across the 4 diagnostic categories. 
+                    Diagonal entries represent high classification certainty across all target classes.
                 </div>
             """, unsafe_allow_html=True)
         else:
-            st.info("Confusion matrix evaluation available after training.")
+            st.info("Confusion matrix evaluation available from training artifacts.")
+
+    with tab4:
+        st.markdown("### Clinical Evaluation Terminology Guide")
+        st.markdown("""
+            | Metric | Meaning in Medical AI | Benchmark Result |
+            | :--- | :--- | :--- |
+            | **mAP@50** | **Mean Average Precision** at Intersection-over-Union (IoU) 0.50 threshold. Represents overall tumor localization quality. | **96.31%** |
+            | **Precision** | **True Positive Accuracy** — Out of all tumor regions predicted by the model, how many were true tumor lesions. Minimizes false alarms. | **93.87%** |
+            | **Recall** | **Sensitivity / Detection Rate** — Out of all real tumors present in scans, how many did the model detect. Critical for patient safety. | **94.01%** |
+            | **Loss Curve** | Indicates the stability of the neural network's gradient updates during bounding box regression and classification. | Steady Convergence |
+        """)
 
     render_disclaimer()
     render_footer()
