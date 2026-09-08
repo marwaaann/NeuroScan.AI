@@ -62,12 +62,20 @@ def render_detection_page(is_api_connected: bool):
         # Check if user uploaded a file
         if uploaded_file is not None:
             up_bytes = uploaded_file.getvalue()
-            up_sig = f"upload_{uploaded_file.name}_{uploaded_file.size}"
-            if st.session_state.get("active_file_sig") != up_sig:
+            up_sig = f"upload_{uploaded_file.name}_{len(up_bytes)}"
+            if st.session_state.get("active_file_sig") != up_sig or "active_bytes" not in st.session_state:
                 st.session_state["active_file_sig"] = up_sig
                 st.session_state["active_bytes"] = up_bytes
                 st.session_state["active_filename"] = uploaded_file.name
                 st.session_state.pop("last_pred", None)
+                st.rerun()
+        elif st.session_state.get("active_file_sig", "").startswith("upload_"):
+            # User clicked 'x' on the file uploader
+            st.session_state.pop("active_bytes", None)
+            st.session_state.pop("active_filename", None)
+            st.session_state.pop("active_file_sig", None)
+            st.session_state.pop("last_pred", None)
+            st.rerun()
 
         # Visual sample selector
         selected_sample_path = render_sample_selector()
@@ -87,14 +95,14 @@ def render_detection_page(is_api_connected: bool):
             "Detection Confidence Threshold",
             min_value=0.10,
             max_value=0.95,
-            value=0.50,
+            value=0.25,
             step=0.05,
-            help="Minimum certainty percentage for bounding boxes to be considered positive detections."
+            help="Minimum certainty percentage for bounding boxes to be considered positive detections. Default: 0.25 (optimal medical detection sensitivity)."
         )
 
         st.markdown("""
             <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: -8px; margin-bottom: 16px;">
-                Higher values reduce false positives; lower values increase sensitivity.
+                Recommended: <strong>0.25</strong> for clinical sensitivity (as in legacy configuration).
             </div>
         """, unsafe_allow_html=True)
 

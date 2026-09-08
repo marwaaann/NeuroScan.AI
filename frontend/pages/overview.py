@@ -147,7 +147,7 @@ def render_overview_page(is_api_connected: bool):
                 "Confidence Threshold",
                 min_value=0.10,
                 max_value=0.90,
-                value=0.45,
+                value=0.25,
                 step=0.05,
                 key="sandbox_conf"
             )
